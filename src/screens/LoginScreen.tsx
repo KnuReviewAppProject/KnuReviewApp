@@ -1,0 +1,212 @@
+import React, { useRef, useState } from 'react';
+import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import BouncyCheckbox from 'react-native-bouncy-checkbox/build/dist/BouncyCheckbox';
+
+const LoginScreen = () => {
+  // Logic
+  const [email, setEmail] = useState<string>('');
+  const [pwd, setPwd] = useState<string>('');
+  const [isVisible, setIsVisible] = useState<boolean>(true);
+  const [isAutoLogin, setIsAutoLogin] = useState<boolean>(false);
+
+  const inputRef = useRef<TextInput>(null);
+
+  const handleEmailSubmit = () => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
+
+  const Login = (email: string, pwd: string) => {
+    //
+  }
+
+  // View
+  return (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 30,
+        backgroundColor: 'white'
+      }}>
+      <View style={{width: '100%'}}>
+        <Text style={{fontSize: 14, fontWeight: '700'}}>이메일</Text>
+      </View>
+
+      <View
+        style={{
+          width: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginBottom: 15,
+        }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            width: '100%',
+            height: 55,
+            marginTop: 14,
+            paddingLeft: 15,
+            borderRadius: 10,
+            backgroundColor: '#f4f4f4',
+          }}>
+          <TextInput
+            value={email}
+            onChangeText={(text: string) => setEmail(text)}
+            placeholder="이메일"
+            onSubmitEditing={handleEmailSubmit}
+            returnKeyType="next"
+            autoCapitalize="none"
+            keyboardType="email-address"
+            style={{flex: 1, paddingVertical: 0}}
+          />
+
+          <View>
+            <TouchableOpacity onPress={() => setEmail('')}>
+              <Image
+                source={require('../assets/delete_email.png')}
+                style={{
+                  width: 24,
+                  height: 24,
+                  marginRight: 15,
+                  tintColor: '#C7C7CD',
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+
+      <View style={{width: '100%'}}>
+        <Text style={{fontSize: 14, fontWeight: '700'}}>비밀번호</Text>
+      </View>
+
+      <View
+        style={{
+          width: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginBottom: 15,
+        }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            width: '100%',
+            height: 55,
+            marginTop: 14,
+            paddingLeft: 15,
+            borderRadius: 10,
+            backgroundColor: '#f4f4f4',
+          }}>
+          <TextInput
+            ref={inputRef}
+            value={pwd}
+            onChangeText={(text: string) => setPwd(text)}
+            placeholder="비밀번호"
+            returnKeyType="next"
+            keyboardType="visible-password"
+            secureTextEntry={isVisible}
+            onSubmitEditing={() => Login(email, pwd)}
+            style={{flex: 1, paddingVertical: 0}}
+          />
+
+          <View>
+            {isVisible ? (
+              <TouchableOpacity onPress={() => setIsVisible(!isVisible)}>
+                <Image
+                  source={require('../assets/visible.png')}
+                  style={{
+                    width: 28,
+                    height: 28,
+                    marginRight: 15,
+                  }}
+                />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={() => setIsVisible(!isVisible)}>
+                <Image
+                  source={require('../assets/invisible.png')}
+                  style={{
+                    width: 28,
+                    height: 28,
+                    marginRight: 15,
+                  }}
+                />
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+      </View>
+
+      <View
+        style={{
+          width: '100%',
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginBottom: 80,
+        }}>
+        <View>
+          <BouncyCheckbox
+            size={20}
+            fillColor="black"
+            iconStyle={{borderRadius: 3, marginRight: 10}}
+            innerIconStyle={{borderRadius: 3}}
+            disableText
+            isChecked={isAutoLogin}
+            onPress={() => setIsAutoLogin(!isAutoLogin)}
+          />
+        </View>
+        <View>
+          <Text>자동 로그인하기</Text>
+        </View>
+      </View>
+
+      <View
+        style={{
+          width: '100%',
+          height: 55,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: '#287BF3',
+          borderRadius: 10,
+          marginBottom: 25,
+        }}>
+        <TouchableOpacity onPress={() => Login(email, pwd)}>
+          <Text style={{color: 'white', fontWeight: 'bold', fontSize: 16}}>
+            로그인
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <View
+        style={{
+          width: '100%',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <View>
+          <Text style={{fontSize: 14, marginRight: 10}}>
+            아직 회원이 아니신가요?
+          </Text>
+        </View>
+
+        <View>
+          <TouchableOpacity>
+            <Text style={{fontSize: 14, color: '#287BF3', fontWeight: 'bold'}}>
+              회원가입
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </View>
+  );
+};
+
+export default LoginScreen;

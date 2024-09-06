@@ -73,6 +73,7 @@ const LoginScreen = () => {
             <TouchableOpacity onPress={() => setEmail('')}>
               <Image
                 source={require('../assets/delete_email.png')}
+                resizeMode="contain"
                 style={{
                   width: 24,
                   height: 24,
@@ -124,6 +125,7 @@ const LoginScreen = () => {
               <TouchableOpacity onPress={() => setIsVisible(!isVisible)}>
                 <Image
                   source={require('../assets/visible.png')}
+                  resizeMode="contain"
                   style={{
                     width: 28,
                     height: 28,
@@ -135,6 +137,7 @@ const LoginScreen = () => {
               <TouchableOpacity onPress={() => setIsVisible(!isVisible)}>
                 <Image
                   source={require('../assets/invisible.png')}
+                  resizeMode="contain"
                   style={{
                     width: 28,
                     height: 28,
@@ -157,7 +160,8 @@ const LoginScreen = () => {
         <View>
           <BouncyCheckbox
             size={20}
-            fillColor="black"
+            unFillColor="white"
+            fillColor="#287BF3"
             iconStyle={{borderRadius: 3, marginRight: 10}}
             innerIconStyle={{borderRadius: 3}}
             disableText

@@ -9,6 +9,7 @@ const AuthEmailScreen = () => {
     useNavigation<NativeStackNavigationProp<ROOT_NAVIGATION>>();
 
   const [email, setEmail] = useState<string>('');
+  const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const AuthEmail = (email: string) => {
     navigation.navigate('AuthCode');
@@ -83,7 +84,7 @@ const AuthEmailScreen = () => {
             width: '100%',
             height: 55,
             borderBottomWidth: 3,
-            borderColor: '#f4f4f4',
+            borderColor: isFocused ? '#287BF3' : '#f4f4f4',
           }}>
           <TextInput
             value={email}
@@ -93,6 +94,8 @@ const AuthEmailScreen = () => {
             autoCapitalize="none"
             keyboardType="email-address"
             onSubmitEditing={() => AuthEmail(email)}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
             style={{flex: 1, paddingVertical: 0}}
           />
 
@@ -100,6 +103,7 @@ const AuthEmailScreen = () => {
             <TouchableOpacity onPress={() => setEmail('')}>
               <Image
                 source={require('../assets/delete_email.png')}
+                resizeMode="contain"
                 style={{
                   width: 20,
                   height: 20,

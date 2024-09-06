@@ -1,6 +1,8 @@
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useRef, useState } from 'react';
 import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox/build/dist/BouncyCheckbox';
+import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 
 const LoginScreen = () => {
   // Logic
@@ -11,6 +13,9 @@ const LoginScreen = () => {
 
   const inputRef = useRef<TextInput>(null);
 
+  const navigation =
+    useNavigation<NativeStackNavigationProp<ROOT_NAVIGATION>>();
+  
   const handleEmailSubmit = () => {
     if (inputRef.current) {
       inputRef.current.focus();
@@ -29,9 +34,9 @@ const LoginScreen = () => {
         justifyContent: 'center',
         alignItems: 'center',
         paddingHorizontal: 30,
-        backgroundColor: 'white'
+        backgroundColor: 'white',
       }}>
-      <View style={{width: '100%'}}>
+      <View style={{width: '100%', marginBottom: 14}}>
         <Text style={{fontSize: 14, fontWeight: '700'}}>이메일</Text>
       </View>
 
@@ -49,7 +54,6 @@ const LoginScreen = () => {
             alignItems: 'center',
             width: '100%',
             height: 55,
-            marginTop: 14,
             paddingLeft: 15,
             borderRadius: 10,
             backgroundColor: '#f4f4f4',
@@ -81,7 +85,7 @@ const LoginScreen = () => {
         </View>
       </View>
 
-      <View style={{width: '100%'}}>
+      <View style={{width: '100%', marginBottom: 14}}>
         <Text style={{fontSize: 14, fontWeight: '700'}}>비밀번호</Text>
       </View>
 
@@ -99,7 +103,6 @@ const LoginScreen = () => {
             alignItems: 'center',
             width: '100%',
             height: 55,
-            marginTop: 14,
             paddingLeft: 15,
             borderRadius: 10,
             backgroundColor: '#f4f4f4',
@@ -198,7 +201,7 @@ const LoginScreen = () => {
         </View>
 
         <View>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('AuthEmail')}>
             <Text style={{fontSize: 14, color: '#287BF3', fontWeight: 'bold'}}>
               회원가입
             </Text>

@@ -3,6 +3,11 @@ import React, { useState } from 'react';
 import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 
+const isValidEmail = (email: string) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
 const AuthEmailScreen = () => {
   // Logic
   const navigation =
@@ -10,6 +15,8 @@ const AuthEmailScreen = () => {
 
   const [email, setEmail] = useState<string>('');
   const [isFocused, setIsFocused] = useState<boolean>(false);
+
+  const isEmailValid = isValidEmail(email);
 
   const AuthEmail = (email: string) => {
     navigation.navigate('AuthCode');
@@ -121,11 +128,18 @@ const AuthEmailScreen = () => {
           height: 55,
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: '#287BF3',
+          backgroundColor: isEmailValid ? '#287BF3' : '#f4f4f4',
           borderRadius: 10,
         }}>
-        <TouchableOpacity onPress={() => AuthEmail(email)}>
-          <Text style={{color: 'white', fontWeight: 'bold', fontSize: 16}}>
+        <TouchableOpacity
+          onPress={() => AuthEmail(email)}
+          disabled={!isEmailValid}>
+          <Text
+            style={{
+              color: isEmailValid ? 'white' : 'black',
+              fontWeight: 'bold',
+              fontSize: 16,
+            }}>
             인증
           </Text>
         </TouchableOpacity>

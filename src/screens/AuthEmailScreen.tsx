@@ -74,7 +74,7 @@ const AuthEmailScreen = () => {
           width: '100%',
           justifyContent: 'center',
           alignItems: 'center',
-          marginBottom: 100,
+          marginBottom: 150,
         }}>
         <View
           style={{

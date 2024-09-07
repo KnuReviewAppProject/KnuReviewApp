@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "857847580323",
+    "project_id": "knureviewapp",
+    "storage_bucket": "knureviewapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:857847580323:android:1fcd04b10407aabcb42116",
+        "android_client_info": {
+          "package_name": "com.knureviewapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqkuaVl3h8dKBhqm5Oxlc2i8DcINQ-5Yk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

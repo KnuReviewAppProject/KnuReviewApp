@@ -18,6 +18,8 @@ end
 
 target 'KnuReviewApp' do
   config = use_native_modules!
+  pod 'GoogleUtilities', :modular_headers => true
+  use_frameworks! :linkage => :static
 
   use_react_native!(
     :path => config[:reactNativePath],

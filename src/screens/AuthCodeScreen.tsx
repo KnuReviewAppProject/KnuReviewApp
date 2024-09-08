@@ -20,7 +20,7 @@ const AuthCodeScreen = () => {
     navigation.navigate('Register');
   };
 
-  // Logic
+  // View
   return (
     <View
       style={{

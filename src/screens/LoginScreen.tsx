@@ -1,7 +1,7 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useRef, useState } from 'react';
 import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import BouncyCheckbox from 'react-native-bouncy-checkbox/build/dist/BouncyCheckbox';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 
 const LoginScreen = () => {
@@ -15,7 +15,7 @@ const LoginScreen = () => {
 
   const navigation =
     useNavigation<NativeStackNavigationProp<ROOT_NAVIGATION>>();
-  
+
   const handleEmailSubmit = () => {
     if (inputRef.current) {
       inputRef.current.focus();
@@ -24,7 +24,7 @@ const LoginScreen = () => {
 
   const Login = (email: string, pwd: string) => {
     //
-  }
+  };
 
   // View
   return (

@@ -15,6 +15,7 @@ export interface KeyboardSpacerProps {
 }
 
 export interface KeyboardSpacerProviderProps {
+  children: React.ReactNode;
   noSpaceHeight?: number;
 }
 

@@ -2,7 +2,9 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useRef, useState } from 'react';
 import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
+import { Login } from '../utils/API/Auth';
 
 const LoginScreen = () => {
   // Logic
@@ -22,22 +24,27 @@ const LoginScreen = () => {
     }
   };
 
-  const Login = (email: string, pwd: string) => {
-    //
-  };
-
   // View
   return (
-    <View
-      style={{
+    <KeyboardAwareScrollView
+      contentContainerStyle={{
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         paddingHorizontal: 30,
         backgroundColor: 'white',
-      }}>
-      <View style={{width: '100%', marginBottom: 14}}>
-        <Text style={{fontSize: 14, fontWeight: '700'}}>이메일</Text>
+      }}
+      resetScrollToCoords={{x: 0, y: 0}}
+      scrollEnabled={true}
+      extraHeight={300}
+      enableOnAndroid={true}
+      keyboardShouldPersistTaps="handled">
+      <View>
+        <Image
+          source={require('../assets/login.jpg')}
+          resizeMode="contain"
+          style={{width: 200, height: 200, marginBottom: 20}}
+        />
       </View>
 
       <View
@@ -86,10 +93,6 @@ const LoginScreen = () => {
         </View>
       </View>
 
-      <View style={{width: '100%', marginBottom: 14}}>
-        <Text style={{fontSize: 14, fontWeight: '700'}}>비밀번호</Text>
-      </View>
-
       <View
         style={{
           width: '100%',
@@ -116,7 +119,7 @@ const LoginScreen = () => {
             returnKeyType="next"
             keyboardType="visible-password"
             secureTextEntry={isVisible}
-            onSubmitEditing={() => Login(email, pwd)}
+            onSubmitEditing={() => Login(email, pwd, navigation)}
             style={{flex: 1, paddingVertical: 0}}
           />
 
@@ -155,7 +158,7 @@ const LoginScreen = () => {
           width: '100%',
           flexDirection: 'row',
           alignItems: 'center',
-          marginBottom: 80,
+          marginBottom: 70,
         }}>
         <View>
           <BouncyCheckbox
@@ -182,9 +185,9 @@ const LoginScreen = () => {
           alignItems: 'center',
           backgroundColor: '#287BF3',
           borderRadius: 10,
-          marginBottom: 25,
+          marginBottom: 15,
         }}>
-        <TouchableOpacity onPress={() => Login(email, pwd)}>
+        <TouchableOpacity onPress={() => Login(email, pwd, navigation)}>
           <Text style={{color: 'white', fontWeight: 'bold', fontSize: 16}}>
             로그인
           </Text>
@@ -212,7 +215,7 @@ const LoginScreen = () => {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </KeyboardAwareScrollView>
   );
 };
 

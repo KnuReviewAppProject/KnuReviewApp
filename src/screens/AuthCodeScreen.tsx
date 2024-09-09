@@ -1,8 +1,10 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import OTPTextView from 'react-native-otp-textinput';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
+import { AuthCode } from '../utils/API/Auth';
 
 const AuthCodeScreen = () => {
   // Logic
@@ -14,31 +16,32 @@ const AuthCodeScreen = () => {
 
   const isCodeValid = code.length === 6;
 
-  const clearCode = () => inputRef.current?.clear();
-
-  const AuthCode = (code: string) => {
-    navigation.navigate('Register');
-  };
+  // const clearCode = () => inputRef.current?.clear();
 
   // View
   return (
-    <View
-      style={{
+    <KeyboardAwareScrollView
+      contentContainerStyle={{
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'white',
         paddingHorizontal: 30,
-      }}>
+        backgroundColor: 'white',
+      }}
+      resetScrollToCoords={{x: 0, y: 0}}
+      scrollEnabled={true}
+      extraHeight={300}
+      enableOnAndroid={true}
+      keyboardShouldPersistTaps="handled">
       <View
         style={{
           justifyContent: 'center',
           alignSelf: 'flex-start',
-          // marginBottom: 5,
+          marginBottom: 10,
         }}>
         <Image
           source={require('../assets/auth_code.png')}
-          style={{width: 230, height: 100}}
+          style={{width: 230, height: 50}}
           resizeMode="contain"
         />
       </View>
@@ -67,7 +70,7 @@ const AuthCodeScreen = () => {
         style={{
           justifyContent: 'center',
           alignSelf: 'flex-start',
-          marginBottom: 60,
+          marginBottom: 100,
         }}>
         <Text style={{fontSize: 15, fontWeight: 'medium', color: '#50555C'}}>
           본인인증에만 활용되며, 절대 노출되지 않아요.
@@ -79,7 +82,7 @@ const AuthCodeScreen = () => {
           width: '100%',
           justifyContent: 'center',
           alignItems: 'center',
-          marginBottom: 20,
+          marginBottom: 10,
         }}>
         <OTPTextView
           containerStyle={{marginBottom: 5, height: 55}}
@@ -90,16 +93,18 @@ const AuthCodeScreen = () => {
           tintColor="#287BF3"
           offTintColor="#f4f4f4"
           autoFocus={true}
+          onSubmitEditing={() => isCodeValid && AuthCode(code, navigation)} 
         />
+      </View>
 
-        <View
-          style={{
-            width: '100%',
-            justifyContent: 'center',
-            alignSelf: 'flex-start',
-          }}>
-          <Text style={{fontSize: 18, color: '#287BF3'}}>5 : 00</Text>
-        </View>
+      <View
+        style={{
+          width: '100%',
+          justifyContent: 'center',
+          alignSelf: 'flex-start',
+          marginBottom: 70,
+        }}>
+        <Text style={{fontSize: 14, color: '#287BF3'}}>5: 00</Text>
       </View>
 
       <View
@@ -107,7 +112,7 @@ const AuthCodeScreen = () => {
           width: '100%',
           justifyContent: 'center',
           alignItems: 'center',
-          marginBottom: 110,
+          marginBottom: 70,
         }}>
         <TouchableOpacity>
           <Text style={{fontSize: 18, color: '#287BF3'}}>재전송</Text>
@@ -124,7 +129,7 @@ const AuthCodeScreen = () => {
           borderRadius: 10,
         }}>
         <TouchableOpacity
-          onPress={() => AuthCode(code)}
+          onPress={() => isCodeValid && AuthCode(code, navigation)}
           disabled={!isCodeValid}>
           <Text
             style={{
@@ -136,7 +141,7 @@ const AuthCodeScreen = () => {
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </KeyboardAwareScrollView>
   );
 };
 

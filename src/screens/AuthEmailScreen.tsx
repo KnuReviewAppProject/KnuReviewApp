@@ -1,12 +1,10 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
-
-const isValidEmail = (email: string) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-};
+import { AuthEmail } from '../utils/API/Auth';
+import { isValidEmail } from '../utils/RegularExpression';
 
 const AuthEmailScreen = () => {
   // Logic
@@ -18,20 +16,21 @@ const AuthEmailScreen = () => {
 
   const isEmailValid = isValidEmail(email);
 
-  const AuthEmail = (email: string) => {
-    navigation.navigate('AuthCode');
-  }
-
   // View
   return (
-    <View
-      style={{
+    <KeyboardAwareScrollView
+      contentContainerStyle={{
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'white',
         paddingHorizontal: 30,
-      }}>
+        backgroundColor: 'white',
+      }}
+      resetScrollToCoords={{x: 0, y: 0}}
+      scrollEnabled={true}
+      extraHeight={300}
+      enableOnAndroid={true}
+      keyboardShouldPersistTaps="handled">
       <View
         style={{
           justifyContent: 'center',
@@ -50,7 +49,7 @@ const AuthEmailScreen = () => {
           flexDirection: 'column',
           justifyContent: 'center',
           alignSelf: 'flex-start',
-          marginBottom: 8,
+          marginBottom: 10,
         }}>
         <View>
           <Text style={{fontSize: 25, fontWeight: 'bold'}}>
@@ -81,7 +80,7 @@ const AuthEmailScreen = () => {
           width: '100%',
           justifyContent: 'center',
           alignItems: 'center',
-          marginBottom: 150,
+          marginBottom: 100,
         }}>
         <View
           style={{
@@ -100,7 +99,7 @@ const AuthEmailScreen = () => {
             returnKeyType="next"
             autoCapitalize="none"
             keyboardType="email-address"
-            onSubmitEditing={() => AuthEmail(email)}
+            onSubmitEditing={() => isEmailValid && AuthEmail(email, navigation)}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             style={{flex: 1, paddingVertical: 0}}
@@ -132,7 +131,7 @@ const AuthEmailScreen = () => {
           borderRadius: 10,
         }}>
         <TouchableOpacity
-          onPress={() => AuthEmail(email)}
+          onPress={() => isEmailValid && AuthEmail(email, navigation)}
           disabled={!isEmailValid}>
           <Text
             style={{
@@ -144,7 +143,7 @@ const AuthEmailScreen = () => {
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </KeyboardAwareScrollView>
   );
 };
 

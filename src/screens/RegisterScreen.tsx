@@ -5,6 +5,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { Register } from '../utils/API/Auth';
 import { isValidNickName, isValidPassword } from '../utils/RegularExpression';
+import { useEmailStore } from '../zustand/store';
 
 const RegisterScreen = () => {
   // Logic
@@ -22,6 +23,8 @@ const RegisterScreen = () => {
 
   const password1Ref = useRef<TextInput>(null);
   const password2Ref = useRef<TextInput>(null);
+
+  const email = useEmailStore(state => state.email);
 
   const isNickNameValid = isValidNickName(nickname);
   const isPassWordValid = pwd1 === pwd2 ? isValidPassword(pwd2) : false;
@@ -188,7 +191,7 @@ const RegisterScreen = () => {
           borderRadius: 10,
           marginBottom: 20,
         }}>
-        <Text style={{fontSize: 16}}>whdwnsdk8111@naver.com</Text>
+        <Text style={{fontSize: 16}}>{email}</Text>
       </View>
 
       <View

@@ -4,5 +4,5 @@ export {
     KeyboardSpacerProvider,
     useKeyboardSpacer,
     withKeyboardSpacer
-} from './KeyboardSpacer/KeyboardSpacer';
+} from '../KeyboardSpacer/KeyboardSpacer';
 

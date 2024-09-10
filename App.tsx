@@ -14,7 +14,7 @@ const App = () => {
   // View
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="AuthEmail">
+      <Stack.Navigator initialRouteName="Login">
         <Stack.Screen
           name="Login"
           component={LoginScreen}

@@ -13,8 +13,10 @@ export const Login = (
 
 export const AuthEmail = (
   email: string,
+  setEmailInStore: (email: string) => void,
   navigation: NativeStackNavigationProp<ROOT_NAVIGATION>,
 ) => {
+  setEmailInStore(email);
   console.log('이메일 인증 성공');
   navigation.navigate('AuthCode');
 };

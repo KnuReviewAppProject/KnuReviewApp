@@ -5,6 +5,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { AuthEmail } from '../utils/API/Auth';
 import { isValidEmail } from '../utils/RegularExpression';
+import { useEmailStore } from '../zustand/store';
 
 const AuthEmailScreen = () => {
   // Logic
@@ -13,6 +14,8 @@ const AuthEmailScreen = () => {
 
   const [email, setEmail] = useState<string>('');
   const [isFocused, setIsFocused] = useState<boolean>(false);
+
+  const setEmailInStore = useEmailStore(state => state.setEmail);
 
   const isEmailValid = isValidEmail(email);
 
@@ -99,7 +102,9 @@ const AuthEmailScreen = () => {
             returnKeyType="next"
             autoCapitalize="none"
             keyboardType="email-address"
-            onSubmitEditing={() => isEmailValid && AuthEmail(email, navigation)}
+            onSubmitEditing={() =>
+              isEmailValid && AuthEmail(email, setEmailInStore, navigation)
+            }
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             style={{flex: 1, paddingVertical: 0}}
@@ -131,7 +136,9 @@ const AuthEmailScreen = () => {
           borderRadius: 10,
         }}>
         <TouchableOpacity
-          onPress={() => isEmailValid && AuthEmail(email, navigation)}
+          onPress={() =>
+            isEmailValid && AuthEmail(email, setEmailInStore, navigation)
+          }
           disabled={!isEmailValid}>
           <Text
             style={{

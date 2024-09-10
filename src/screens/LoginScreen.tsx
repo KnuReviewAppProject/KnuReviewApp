@@ -1,8 +1,16 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { useRef, useState } from 'react';
-import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useRef, useState } from 'react';
+import {
+  Image,
+  Pressable,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { Login } from '../utils/API/Auth';
 
@@ -26,34 +34,30 @@ const LoginScreen = () => {
 
   // View
   return (
-    <KeyboardAwareScrollView
-      contentContainerStyle={{
+    <SafeAreaView
+      style={{
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
         paddingHorizontal: 30,
-        backgroundColor: 'white',
-      }}
-      resetScrollToCoords={{x: 0, y: 0}}
-      scrollEnabled={true}
-      extraHeight={300}
-      enableOnAndroid={true}
-      keyboardShouldPersistTaps="handled">
-      <View>
+        backgroundColor: '#fff',
+      }}>
+      <KeyboardAwareScrollView
+        contentContainerStyle={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+        resetScrollToCoords={{x: 0, y: 0}}
+        scrollEnabled={true}
+        extraHeight={300}
+        enableOnAndroid={true}
+        enableAutomaticScroll={true}
+        keyboardShouldPersistTaps="handled">
         <Image
           source={require('../assets/login.jpg')}
           resizeMode="contain"
           style={{width: 200, height: 200, marginBottom: 20}}
         />
-      </View>
 
-      <View
-        style={{
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginBottom: 15,
-        }}>
         <View
           style={{
             flexDirection: 'row',
@@ -64,6 +68,7 @@ const LoginScreen = () => {
             paddingLeft: 15,
             borderRadius: 10,
             backgroundColor: '#f4f4f4',
+            marginBottom: 15,
           }}>
           <TextInput
             value={email}
@@ -91,15 +96,7 @@ const LoginScreen = () => {
             </TouchableOpacity>
           </View>
         </View>
-      </View>
 
-      <View
-        style={{
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginBottom: 15,
-        }}>
         <View
           style={{
             flexDirection: 'row',
@@ -110,6 +107,7 @@ const LoginScreen = () => {
             paddingLeft: 15,
             borderRadius: 10,
             backgroundColor: '#f4f4f4',
+            marginBottom: 15,
           }}>
           <TextInput
             ref={inputRef}
@@ -122,7 +120,6 @@ const LoginScreen = () => {
             onSubmitEditing={() => Login(email, pwd, navigation)}
             style={{flex: 1, paddingVertical: 0}}
           />
-
           <View>
             {isVisible ? (
               <TouchableOpacity onPress={() => setIsVisible(!isVisible)}>
@@ -151,16 +148,14 @@ const LoginScreen = () => {
             )}
           </View>
         </View>
-      </View>
 
-      <View
-        style={{
-          width: '100%',
-          flexDirection: 'row',
-          alignItems: 'center',
-          marginBottom: 70,
-        }}>
-        <View>
+        <View
+          style={{
+            width: '100%',
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginBottom: 70,
+          }}>
           <BouncyCheckbox
             size={20}
             unFillColor="white"
@@ -171,51 +166,45 @@ const LoginScreen = () => {
             isChecked={isAutoLogin}
             onPress={() => setIsAutoLogin(!isAutoLogin)}
           />
-        </View>
-        <View>
+
           <Text>자동 로그인하기</Text>
         </View>
-      </View>
 
-      <View
-        style={{
-          width: '100%',
-          height: 55,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: '#287BF3',
-          borderRadius: 10,
-          marginBottom: 15,
-        }}>
-        <TouchableOpacity onPress={() => Login(email, pwd, navigation)}>
+        <Pressable
+          style={{
+            width: '100%',
+            height: 55,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: '#287BF3',
+            borderRadius: 10,
+            marginBottom: 15,
+          }}
+          onPress={() => Login(email, pwd, navigation)}>
           <Text style={{color: 'white', fontWeight: 'bold', fontSize: 16}}>
             로그인
           </Text>
-        </TouchableOpacity>
-      </View>
+        </Pressable>
 
-      <View
-        style={{
-          width: '100%',
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <View>
+        <View
+          style={{
+            width: '100%',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
           <Text style={{fontSize: 14, marginRight: 10}}>
             아직 회원이 아니신가요?
           </Text>
-        </View>
 
-        <View>
           <TouchableOpacity onPress={() => navigation.navigate('AuthEmail')}>
             <Text style={{fontSize: 14, color: '#287BF3', fontWeight: 'bold'}}>
               회원가입
             </Text>
           </TouchableOpacity>
         </View>
-      </View>
-    </KeyboardAwareScrollView>
+      </KeyboardAwareScrollView>
+    </SafeAreaView>
   );
 };
 

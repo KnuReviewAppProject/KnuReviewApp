@@ -1,7 +1,15 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useState } from 'react';
-import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  Pressable,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { AuthEmail } from '../utils/API/Auth';
 import { isValidEmail } from '../utils/RegularExpression';
@@ -21,70 +29,58 @@ const AuthEmailScreen = () => {
 
   // View
   return (
-    <KeyboardAwareScrollView
-      contentContainerStyle={{
+    <SafeAreaView
+      style={{
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
         paddingHorizontal: 30,
         backgroundColor: 'white',
-      }}
-      resetScrollToCoords={{x: 0, y: 0}}
-      scrollEnabled={true}
-      extraHeight={300}
-      enableOnAndroid={true}
-      keyboardShouldPersistTaps="handled">
-      <View
-        style={{
-          justifyContent: 'center',
-          alignSelf: 'flex-start',
-          marginBottom: 10,
-        }}>
+      }}>
+      <KeyboardAwareScrollView
+        contentContainerStyle={{
+          flex: 1,
+        }}
+        resetScrollToCoords={{x: 0, y: 0}}
+        scrollEnabled={true}
+        extraHeight={300}
+        enableOnAndroid={true}
+        enableAutomaticScroll={true}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled">
         <Image
           source={require('../assets/auth_email.png')}
-          style={{width: 100, height: 100}}
+          style={{width: 100, height: 100, marginBottom: 10}}
           resizeMode="contain"
         />
-      </View>
 
-      <View
-        style={{
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignSelf: 'flex-start',
-          marginBottom: 10,
-        }}>
-        <View>
-          <Text style={{fontSize: 25, fontWeight: 'bold'}}>
-            본인인증을 위한
-          </Text>
+        <View
+          style={{
+            flexDirection: 'column',
+            marginBottom: 10,
+          }}>
+          <View>
+            <Text style={{fontSize: 25, fontWeight: 'bold'}}>
+              본인인증을 위한
+            </Text>
+          </View>
+
+          <View>
+            <Text style={{fontSize: 25, fontWeight: 'bold'}}>
+              <Text style={{color: '#287BF3'}}>이메일</Text>을 입력하세요.
+            </Text>
+          </View>
         </View>
 
-        <View>
-          <Text style={{fontSize: 25, fontWeight: 'bold'}}>
-            <Text style={{color: '#287BF3'}}>이메일</Text>을 입력하세요.
-          </Text>
-        </View>
-      </View>
-
-      <View
-        style={{
-          justifyContent: 'center',
-          alignSelf: 'flex-start',
-          marginBottom: 100,
-        }}>
-        <Text style={{fontSize: 15, fontWeight: 'medium', color: '#50555C'}}>
+        <Text
+          style={{
+            fontSize: 15,
+            fontWeight: 'medium',
+            color: '#50555C',
+            marginBottom: 100,
+          }}>
           본인인증에만 활용되며, 절대 노출되지 않아요.
         </Text>
-      </View>
 
-      <View
-        style={{
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginBottom: 100,
-        }}>
         <View
           style={{
             flexDirection: 'row',
@@ -94,6 +90,7 @@ const AuthEmailScreen = () => {
             height: 55,
             borderBottomWidth: 3,
             borderColor: isFocused ? '#287BF3' : '#f4f4f4',
+            marginBottom: 100,
           }}>
           <TextInput
             value={email}
@@ -124,18 +121,16 @@ const AuthEmailScreen = () => {
             </TouchableOpacity>
           </View>
         </View>
-      </View>
 
-      <View
-        style={{
-          width: '100%',
-          height: 55,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: isEmailValid ? '#287BF3' : '#f4f4f4',
-          borderRadius: 10,
-        }}>
-        <TouchableOpacity
+        <Pressable
+          style={{
+            width: '100%',
+            height: 55,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: isEmailValid ? '#287BF3' : '#f4f4f4',
+            borderRadius: 10,
+          }}
           onPress={() =>
             isEmailValid && AuthEmail(email, setEmailInStore, navigation)
           }
@@ -148,9 +143,9 @@ const AuthEmailScreen = () => {
             }}>
             인증
           </Text>
-        </TouchableOpacity>
-      </View>
-    </KeyboardAwareScrollView>
+        </Pressable>
+      </KeyboardAwareScrollView>
+    </SafeAreaView>
   );
 };
 

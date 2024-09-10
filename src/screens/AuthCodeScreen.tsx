@@ -1,8 +1,16 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useRef, useState } from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  Platform,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import OTPTextView from 'react-native-otp-textinput';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { AuthCode } from '../utils/API/Auth';
 import { isValidCode } from '../utils/RegularExpression';
@@ -21,72 +29,59 @@ const AuthCodeScreen = () => {
 
   // View
   return (
-    <KeyboardAwareScrollView
-      contentContainerStyle={{
+    <SafeAreaView
+      style={{
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
         paddingHorizontal: 30,
         backgroundColor: 'white',
-      }}
-      resetScrollToCoords={{x: 0, y: 0}}
-      scrollEnabled={true}
-      extraHeight={300}
-      enableOnAndroid={true}
-      keyboardShouldPersistTaps="handled">
-      <View
-        style={{
-          justifyContent: 'center',
-          alignSelf: 'flex-start',
-          marginBottom: 10,
-        }}>
+      }}>
+      <KeyboardAwareScrollView
+        contentContainerStyle={{
+          flex: 1,
+        }}
+        resetScrollToCoords={{x: 0, y: 0}}
+        scrollEnabled={true}
+        extraHeight={300}
+        enableOnAndroid={true}
+        enableAutomaticScroll={true}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled">
         <Image
           source={require('../assets/auth_code.png')}
-          style={{width: 230, height: 50}}
+          style={{width: 230, height: 50, marginBottom: 10}}
           resizeMode="contain"
         />
-      </View>
 
-      <View
-        style={{
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignSelf: 'flex-start',
-          marginBottom: 8,
-        }}>
-        <View>
-          <Text style={{fontSize: 25, fontWeight: 'bold'}}>
-            본인인증을 위한
+        <View
+          style={{
+            flexDirection: 'column',
+            marginBottom: 8,
+          }}>
+          <View>
+            <Text style={{fontSize: 25, fontWeight: 'bold'}}>
+              본인인증을 위한
+            </Text>
+          </View>
+
+          <View>
+            <Text style={{fontSize: 25, fontWeight: 'bold'}}>
+              <Text style={{color: '#287BF3'}}>인증코드</Text>를 입력하세요.
+            </Text>
+          </View>
+        </View>
+
+        <View
+          style={{
+            marginBottom: 100,
+          }}>
+          <Text style={{fontSize: 15, fontWeight: 'medium', color: '#50555C'}}>
+            본인인증에만 활용되며, 절대 노출되지 않아요.
           </Text>
         </View>
 
-        <View>
-          <Text style={{fontSize: 25, fontWeight: 'bold'}}>
-            <Text style={{color: '#287BF3'}}>인증코드</Text>를 입력하세요.
-          </Text>
-        </View>
-      </View>
-
-      <View
-        style={{
-          justifyContent: 'center',
-          alignSelf: 'flex-start',
-          marginBottom: 100,
-        }}>
-        <Text style={{fontSize: 15, fontWeight: 'medium', color: '#50555C'}}>
-          본인인증에만 활용되며, 절대 노출되지 않아요.
-        </Text>
-      </View>
-
-      <View
-        style={{
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginBottom: 10,
-        }}>
         <OTPTextView
-          containerStyle={{marginBottom: 5, height: 55}}
+          containerStyle={{height: 55, marginBottom: 5}}
           ref={inputRef}
           inputCount={6}
           handleTextChange={(text: string) => setCode(text)}
@@ -96,40 +91,34 @@ const AuthCodeScreen = () => {
           autoFocus={true}
           onSubmitEditing={() => isCodeValid && AuthCode(code, navigation)}
         />
-      </View>
 
-      <View
-        style={{
-          width: '100%',
-          justifyContent: 'center',
-          alignSelf: 'flex-start',
-          marginBottom: 70,
-        }}>
-        <Text style={{fontSize: 14, color: '#287BF3'}}>5: 00</Text>
-      </View>
+        <Text
+          style={{
+            fontSize: 14,
+            color: '#287BF3',
+            marginBottom: Platform.OS === 'ios' ? 70 : 100,
+          }}>
+          5: 00
+        </Text>
 
-      <View
-        style={{
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginBottom: 70,
-        }}>
-        <TouchableOpacity onPress={clearCode}>
+        <TouchableOpacity
+          style={{
+            alignItems: 'center',
+            marginBottom: Platform.OS === 'ios' ? 70 : 150,
+          }}
+          onPress={clearCode}>
           <Text style={{fontSize: 18, color: '#287BF3'}}>재전송</Text>
         </TouchableOpacity>
-      </View>
 
-      <View
-        style={{
-          width: '100%',
-          height: 55,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: isCodeValid ? '#287BF3' : '#f4f4f4',
-          borderRadius: 10,
-        }}>
-        <TouchableOpacity
+        <Pressable
+          style={{
+            width: '100%',
+            height: 55,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: isCodeValid ? '#287BF3' : '#f4f4f4',
+            borderRadius: 10,
+          }}
           onPress={() => isCodeValid && AuthCode(code, navigation)}
           disabled={!isCodeValid}>
           <Text
@@ -140,9 +129,9 @@ const AuthCodeScreen = () => {
             }}>
             인증
           </Text>
-        </TouchableOpacity>
-      </View>
-    </KeyboardAwareScrollView>
+        </Pressable>
+      </KeyboardAwareScrollView>
+    </SafeAreaView>
   );
 };
 

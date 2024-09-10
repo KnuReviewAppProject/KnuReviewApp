@@ -5,6 +5,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import OTPTextView from 'react-native-otp-textinput';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { AuthCode } from '../utils/API/Auth';
+import { isValidCode } from '../utils/RegularExpression';
 
 const AuthCodeScreen = () => {
   // Logic
@@ -14,9 +15,9 @@ const AuthCodeScreen = () => {
   const [code, setCode] = useState<string>('');
   const inputRef = useRef<OTPTextView>(null);
 
-  const isCodeValid = code.length === 6;
+  const isCodeValid = isValidCode(code);
 
-  // const clearCode = () => inputRef.current?.clear();
+  const clearCode = () => inputRef.current?.clear();
 
   // View
   return (
@@ -93,7 +94,7 @@ const AuthCodeScreen = () => {
           tintColor="#287BF3"
           offTintColor="#f4f4f4"
           autoFocus={true}
-          onSubmitEditing={() => isCodeValid && AuthCode(code, navigation)} 
+          onSubmitEditing={() => isCodeValid && AuthCode(code, navigation)}
         />
       </View>
 
@@ -114,7 +115,7 @@ const AuthCodeScreen = () => {
           alignItems: 'center',
           marginBottom: 70,
         }}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={clearCode}>
           <Text style={{fontSize: 18, color: '#287BF3'}}>재전송</Text>
         </TouchableOpacity>
       </View>

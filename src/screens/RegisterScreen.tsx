@@ -4,13 +4,12 @@ import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { Register } from '../utils/API/Auth';
-import { isValidNickName, isValidPassword } from '../utils/RegularExpression/index';
-
+import { isValidNickName, isValidPassword } from '../utils/RegularExpression';
 
 const RegisterScreen = () => {
   // Logic
   const navigation =
-  useNavigation<NativeStackNavigationProp<ROOT_NAVIGATION>>();
+    useNavigation<NativeStackNavigationProp<ROOT_NAVIGATION>>();
 
   const [nickname, setNickname] = useState<string>('');
   const [pwd1, setPwd1] = useState<string>('');
@@ -25,7 +24,7 @@ const RegisterScreen = () => {
   const password2Ref = useRef<TextInput>(null);
 
   const isNickNameValid = isValidNickName(nickname);
-  const isPassWordValid = pwd1 === pwd2 ? isValidPassword(pwd2) : null;
+  const isPassWordValid = pwd1 === pwd2 ? isValidPassword(pwd2) : false;
 
   const handlePassword1Submit = () => {
     if (password1Ref.current) {
@@ -300,13 +299,15 @@ const RegisterScreen = () => {
           ref={password2Ref}
           value={pwd2}
           onChangeText={(text: string) => setPwd2(text)}
-          placeholder="비밀번호"
+          placeholder="비밀번호 확인"
           returnKeyType="next"
           autoCapitalize="none"
           secureTextEntry={isPwd2Visible}
           keyboardType="visible-password"
           onSubmitEditing={() =>
-            Register(nickname, email, password2, navigation)
+            isNickNameValid &&
+            isPassWordValid &&
+            Register(nickname, email, pwd2, navigation)
           }
           onFocus={() => setIsPwd2Focused(true)}
           onBlur={() => setIsPwd2Focused(false)}
@@ -345,18 +346,20 @@ const RegisterScreen = () => {
           height: 55,
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: '#287BF3',
-          // backgroundColor: isCodeValid ? '#287BF3' : '#f4f4f4',
+          backgroundColor:
+            isNickNameValid && isPassWordValid ? '#287BF3' : '#f4f4f4',
           borderRadius: 10,
         }}>
         <TouchableOpacity
-        // onPress={() => AuthCode(code)}
-        // disabled={!isCodeValid}
-        >
+          onPress={() =>
+            isNickNameValid &&
+            isPassWordValid &&
+            Register(nickname, email, pwd2, navigation)
+          }
+          disabled={!isNickNameValid || !isPassWordValid}>
           <Text
             style={{
-              color: '#fff',
-              // color: isCodeValid ? 'white' : 'black',
+              color: isNickNameValid && isPassWordValid ? 'white' : 'black',
               fontWeight: 'bold',
               fontSize: 16,
             }}>

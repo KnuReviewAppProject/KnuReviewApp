@@ -2,6 +2,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useRef, useState } from 'react';
 import {
   Image,
+  Platform,
   Pressable,
   Text,
   TextInput,
@@ -9,7 +10,6 @@ import {
   View,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { Register } from '../utils/API/Auth';
 import { isValidNickName, isValidPassword } from '../utils/RegularExpression';
@@ -51,7 +51,7 @@ const RegisterScreen = () => {
 
   // View
   return (
-    <SafeAreaView
+    <View
       style={{
         flex: 1,
         paddingHorizontal: 30,
@@ -66,8 +66,6 @@ const RegisterScreen = () => {
         extraHeight={300}
         enableOnAndroid={true}
         enableAutomaticScroll={true}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
         keyboardShouldPersistTaps="handled">
         <Image
           source={require('../assets/register.png')}
@@ -275,7 +273,7 @@ const RegisterScreen = () => {
             height: 55,
             borderBottomWidth: 3,
             borderColor: isPwd2Focused ? '#287BF3' : '#f4f4f4',
-            marginBottom: 70,
+            marginBottom: Platform.OS === 'ios' ? 30 : 70,
           }}>
           <TextInput
             ref={password2Ref}
@@ -351,7 +349,7 @@ const RegisterScreen = () => {
           </Text>
         </Pressable>
       </KeyboardAwareScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

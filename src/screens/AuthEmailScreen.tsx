@@ -9,7 +9,6 @@ import {
   View,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { AuthEmail } from '../utils/API/Auth';
 import { isValidEmail } from '../utils/RegularExpression';
@@ -29,7 +28,7 @@ const AuthEmailScreen = () => {
 
   // View
   return (
-    <SafeAreaView
+    <View
       style={{
         flex: 1,
         paddingHorizontal: 30,
@@ -44,8 +43,6 @@ const AuthEmailScreen = () => {
         extraHeight={300}
         enableOnAndroid={true}
         enableAutomaticScroll={true}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
         keyboardShouldPersistTaps="handled">
         <Image
           source={require('../assets/auth_email.png')}
@@ -145,7 +142,7 @@ const AuthEmailScreen = () => {
           </Text>
         </Pressable>
       </KeyboardAwareScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

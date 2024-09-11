@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import OTPTextView from 'react-native-otp-textinput';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { AuthCode } from '../utils/API/Auth';
 import { isValidCode } from '../utils/RegularExpression';
@@ -29,7 +28,7 @@ const AuthCodeScreen = () => {
 
   // View
   return (
-    <SafeAreaView
+    <View
       style={{
         flex: 1,
         paddingHorizontal: 30,
@@ -44,12 +43,10 @@ const AuthCodeScreen = () => {
         extraHeight={300}
         enableOnAndroid={true}
         enableAutomaticScroll={true}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
         keyboardShouldPersistTaps="handled">
         <Image
           source={require('../assets/auth_code.png')}
-          style={{width: 230, height: 50, marginBottom: 10}}
+          style={{width: 230, height: 100, marginBottom: 10}}
           resizeMode="contain"
         />
 
@@ -131,7 +128,7 @@ const AuthCodeScreen = () => {
           </Text>
         </Pressable>
       </KeyboardAwareScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

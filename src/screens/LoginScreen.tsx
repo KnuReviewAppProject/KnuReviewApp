@@ -38,7 +38,7 @@ const LoginScreen = () => {
       style={{
         flex: 1,
         paddingHorizontal: 30,
-        backgroundColor: '#fff',
+        backgroundColor: 'white',
       }}>
       <KeyboardAwareScrollView
         contentContainerStyle={{

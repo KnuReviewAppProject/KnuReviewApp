@@ -6,8 +6,13 @@
     - Cloud Firestore
     - Cloud Storage
 - Zustand
-- React Navigation
+- Navigation
+    - Stack
 
 ## 앞으로 추가할 라이브러리
-- Axios(예정)
-- Axios Interceptors(예정)
+- Axios
+- Axios Interceptors
+- Naver Map
+- React-Query
+- Navigation
+    - Bottom Tabs

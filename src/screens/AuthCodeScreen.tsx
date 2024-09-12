@@ -28,38 +28,29 @@ const AuthCodeScreen = () => {
 
   // View
   return (
-    <View
-      style={{
+    <KeyboardAwareScrollView
+      contentContainerStyle={{
         flex: 1,
         paddingHorizontal: 30,
         backgroundColor: 'white',
-      }}>
-      <KeyboardAwareScrollView
-        contentContainerStyle={{
-          flex: 1,
-        }}
-        resetScrollToCoords={{x: 0, y: 0}}
-        scrollEnabled={true}
-        extraHeight={300}
-        enableOnAndroid={true}
-        enableAutomaticScroll={true}
-        keyboardShouldPersistTaps="handled">
+      }}
+      resetScrollToCoords={{x: 0, y: 0}}
+      scrollEnabled={true}
+      extraHeight={300}
+      enableOnAndroid={true}
+      enableAutomaticScroll={true}
+      keyboardShouldPersistTaps="handled">
+      <View style={{flex: 1}}>
         <Image
           source={require('../assets/auth_code.png')}
           style={{width: 230, height: 100, marginBottom: 10}}
           resizeMode="contain"
         />
 
-        <View
-          style={{
-            flexDirection: 'column',
-            marginBottom: 8,
-          }}>
-          <View>
-            <Text style={{fontSize: 25, fontWeight: 'bold'}}>
-              본인인증을 위한
-            </Text>
-          </View>
+        <View style={{flexDirection: 'column', marginBottom: 8}}>
+          <Text style={{fontSize: 25, fontWeight: 'bold'}}>
+            본인인증을 위한
+          </Text>
 
           <View>
             <Text style={{fontSize: 25, fontWeight: 'bold'}}>
@@ -85,7 +76,6 @@ const AuthCodeScreen = () => {
           keyboardType="numeric"
           tintColor="#287BF3"
           offTintColor="#f4f4f4"
-          autoFocus={true}
           onSubmitEditing={() => isCodeValid && AuthCode(code, navigation)}
         />
 
@@ -127,8 +117,8 @@ const AuthCodeScreen = () => {
             인증
           </Text>
         </Pressable>
-      </KeyboardAwareScrollView>
-    </View>
+      </View>
+    </KeyboardAwareScrollView>
   );
 };
 

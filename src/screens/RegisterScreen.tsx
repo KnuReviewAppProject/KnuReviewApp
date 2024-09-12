@@ -51,22 +51,19 @@ const RegisterScreen = () => {
 
   // View
   return (
-    <View
-      style={{
+    <KeyboardAwareScrollView
+      contentContainerStyle={{
         flex: 1,
         paddingHorizontal: 30,
         backgroundColor: 'white',
-      }}>
-      <KeyboardAwareScrollView
-        contentContainerStyle={{
-          flex: 1,
-        }}
-        resetScrollToCoords={{x: 0, y: 0}}
-        scrollEnabled={true}
-        extraHeight={300}
-        enableOnAndroid={true}
-        enableAutomaticScroll={true}
-        keyboardShouldPersistTaps="handled">
+      }}
+      resetScrollToCoords={{x: 0, y: 0}}
+      scrollEnabled={true}
+      extraHeight={300}
+      enableOnAndroid={true}
+      enableAutomaticScroll={true}
+      keyboardShouldPersistTaps="handled">
+      <View style={{flex: 1}}>
         <Image
           source={require('../assets/register.png')}
           style={{width: 100, height: 100, marginBottom: 10}}
@@ -78,10 +75,7 @@ const RegisterScreen = () => {
             flexDirection: 'column',
             marginBottom: 50,
           }}>
-          <View>
-            <Text style={{fontSize: 25, fontWeight: 'bold'}}>마지막으로</Text>
-          </View>
-
+          <Text style={{fontSize: 25, fontWeight: 'bold'}}>마지막으로</Text>
           <View>
             <Text style={{fontSize: 25, fontWeight: 'bold'}}>
               <Text style={{color: '#287BF3'}}>프로필 정보를</Text> 입력하세요.
@@ -348,8 +342,8 @@ const RegisterScreen = () => {
             인증
           </Text>
         </Pressable>
-      </KeyboardAwareScrollView>
-    </View>
+      </View>
+    </KeyboardAwareScrollView>
   );
 };
 

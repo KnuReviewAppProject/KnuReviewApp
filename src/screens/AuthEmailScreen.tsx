@@ -28,39 +28,28 @@ const AuthEmailScreen = () => {
 
   // View
   return (
-    <View
-      style={{
+    <KeyboardAwareScrollView
+      contentContainerStyle={{
         flex: 1,
         paddingHorizontal: 30,
         backgroundColor: 'white',
-      }}>
-      <KeyboardAwareScrollView
-        contentContainerStyle={{
-          flex: 1,
-        }}
-        resetScrollToCoords={{x: 0, y: 0}}
-        scrollEnabled={true}
-        extraHeight={300}
-        enableOnAndroid={true}
-        enableAutomaticScroll={true}
-        keyboardShouldPersistTaps="handled">
+      }}
+      resetScrollToCoords={{x: 0, y: 0}}
+      scrollEnabled={true}
+      extraHeight={300}
+      enableOnAndroid={true}
+      keyboardShouldPersistTaps="handled">
+      <View style={{flex: 1}}>
         <Image
           source={require('../assets/auth_email.png')}
           style={{width: 100, height: 100, marginBottom: 10}}
           resizeMode="contain"
         />
 
-        <View
-          style={{
-            flexDirection: 'column',
-            marginBottom: 10,
-          }}>
-          <View>
-            <Text style={{fontSize: 25, fontWeight: 'bold'}}>
-              본인인증을 위한
-            </Text>
-          </View>
-
+        <View style={{flexDirection: 'column', marginBottom: 10}}>
+          <Text style={{fontSize: 25, fontWeight: 'bold'}}>
+            본인인증을 위한
+          </Text>
           <View>
             <Text style={{fontSize: 25, fontWeight: 'bold'}}>
               <Text style={{color: '#287BF3'}}>이메일</Text>을 입력하세요.
@@ -83,7 +72,6 @@ const AuthEmailScreen = () => {
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
-            width: '100%',
             height: 55,
             borderBottomWidth: 3,
             borderColor: isFocused ? '#287BF3' : '#f4f4f4',
@@ -121,7 +109,6 @@ const AuthEmailScreen = () => {
 
         <Pressable
           style={{
-            width: '100%',
             height: 55,
             justifyContent: 'center',
             alignItems: 'center',
@@ -141,8 +128,8 @@ const AuthEmailScreen = () => {
             인증
           </Text>
         </Pressable>
-      </KeyboardAwareScrollView>
-    </View>
+      </View>
+    </KeyboardAwareScrollView>
   );
 };
 

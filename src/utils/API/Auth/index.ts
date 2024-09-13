@@ -1,7 +1,9 @@
+import { ANDROID_API_URL, IOS_API_URL } from '@env';
 import { firebase } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Alert } from 'react-native';
+import axios from 'axios';
+import { Alert, Platform } from 'react-native';
 
 export const Login = (
   email: string,
@@ -11,14 +13,20 @@ export const Login = (
   console.log('로그인 성공');
 };
 
-export const AuthEmail = (
+export const AuthEmail = async (
   email: string,
-  setEmailInStore: (email: string) => void,
-  navigation: NativeStackNavigationProp<ROOT_NAVIGATION>,
+  setEmailInStore?: (email: string) => void,
+  navigation?: NativeStackNavigationProp<ROOT_NAVIGATION>,
 ) => {
-  setEmailInStore(email);
-  console.log('이메일 인증 성공');
-  navigation.navigate('AuthCode');
+  try {
+    const API_URL = Platform.OS === 'ios' ? IOS_API_URL : ANDROID_API_URL;
+    const response = await axios.post(`${API_URL}/api/verify-email`, {
+      email: email,
+    });
+    console.log(response.data);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const AuthCode = (

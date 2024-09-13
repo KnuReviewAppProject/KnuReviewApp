@@ -2,6 +2,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useRef, useState } from 'react';
 import {
   Image,
+  Platform,
   Pressable,
   Text,
   TextInput,

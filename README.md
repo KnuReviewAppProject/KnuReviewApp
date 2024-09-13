@@ -9,11 +9,11 @@
     - Cloud Firestore
     - Cloud Storage
 - Zustand
+- Axios
 - Navigation
     - Stack
 
 ## 앞으로 추가할 라이브러리
-- Axios
 - Axios Interceptors
 - Naver Map
 - React-Query

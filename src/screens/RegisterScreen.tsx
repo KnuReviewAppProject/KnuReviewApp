@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
-import { Register } from '../utils/API/Auth';
+import { Register } from '../utils/API/AutAPI';
 import { isValidNickName, isValidPassword } from '../utils/RegularExpression';
 import { useEmailStore } from '../zustand/store';
 

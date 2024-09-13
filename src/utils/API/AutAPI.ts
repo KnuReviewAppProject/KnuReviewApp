@@ -5,6 +5,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import axios from 'axios';
 import { Alert, Platform } from 'react-native';
 
+const API_URL = Platform.OS === 'ios' ? IOS_API_URL : ANDROID_API_URL;
+
 export const Login = (
   email: string,
   password: string,
@@ -15,26 +17,46 @@ export const Login = (
 
 export const AuthEmail = async (
   email: string,
-  setEmailInStore?: (email: string) => void,
-  navigation?: NativeStackNavigationProp<ROOT_NAVIGATION>,
+  setEmailInStore: (email: string) => void,
+  setAuthTokenStore: (token: string) => void,
+  navigation: NativeStackNavigationProp<ROOT_NAVIGATION>,
 ) => {
   try {
-    const API_URL = Platform.OS === 'ios' ? IOS_API_URL : ANDROID_API_URL;
-    const response = await axios.post(`${API_URL}/api/verify-email`, {
-      email: email,
-    });
-    console.log(response.data);
+    await axios
+      .post(`${API_URL}/api/verify-email`, {email: email})
+      .then(res => {
+        console.log(res.status);
+        console.log(res.data);
+        setEmailInStore(email);
+        setAuthTokenStore(res.data.token);
+        navigation.navigate('AuthCode');
+      })
+      .catch(err => console.log(err));
   } catch (error) {
     console.log(error);
   }
 };
 
-export const AuthCode = (
+export const AuthCode = async (
+  email: string,
   code: string,
+  token: string,
+  setAuthTokenStore: (token: string) => void,
   navigation: NativeStackNavigationProp<ROOT_NAVIGATION>,
 ) => {
-  console.log('인증코드 인증 성공');
-  navigation.navigate('Register');
+  try {
+    await axios
+      .post(`${API_URL}/api/verify-email`, {email: email, code, token})
+      .then(res => {
+        console.log(res.status);
+        console.log(res.data);
+        setAuthTokenStore(res.data.token);
+        navigation.navigate('Register');
+      })
+      .catch(err => console.warn(err));
+  } catch (error) {
+    console.warn(error);
+  }
 };
 
 export const Register = (

@@ -12,7 +12,7 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
-import { Login } from '../utils/API/Auth';
+import { Login } from '../utils/API/AutAPI';
 
 const LoginScreen = () => {
   // Logic

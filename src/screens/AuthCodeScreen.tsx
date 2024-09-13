@@ -11,20 +11,26 @@ import {
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import OTPTextView from 'react-native-otp-textinput';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
-import { AuthCode } from '../utils/API/Auth';
+import { AuthCode } from '../utils/API/AutAPI';
 import { isValidCode } from '../utils/RegularExpression';
+import { useAuthTokenStore, useEmailStore } from '../zustand/store';
 
 const AuthCodeScreen = () => {
   // Logic
   const navigation =
     useNavigation<NativeStackNavigationProp<ROOT_NAVIGATION>>();
 
+    const email = useEmailStore(state => state.email);
+    const token = useAuthTokenStore(state => state.token);
+
   const [code, setCode] = useState<string>('');
   const inputRef = useRef<OTPTextView>(null);
 
-  const isCodeValid = isValidCode(code);
-
   const clearCode = () => inputRef.current?.clear();
+
+  const setAuthTokenStore = useAuthTokenStore(state => state.setToken);
+  
+  const isCodeValid = isValidCode(code);
 
   // View
   return (
@@ -69,7 +75,10 @@ const AuthCodeScreen = () => {
         keyboardType="numeric"
         tintColor="#287BF3"
         offTintColor="#f4f4f4"
-        onSubmitEditing={() => isCodeValid && AuthCode(code, navigation)}
+        onSubmitEditing={() =>
+          isCodeValid &&
+          AuthCode(email, code, token, setAuthTokenStore, navigation)
+        }
       />
 
       <Text
@@ -99,7 +108,10 @@ const AuthCodeScreen = () => {
           backgroundColor: isCodeValid ? '#287BF3' : '#f4f4f4',
           borderRadius: 10,
         }}
-        onPress={() => isCodeValid && AuthCode(code, navigation)}
+        onPress={() =>
+          isCodeValid &&
+          AuthCode(email, code, token, setAuthTokenStore, navigation)
+        }
         disabled={!isCodeValid}>
         <Text
           style={{

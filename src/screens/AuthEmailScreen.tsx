@@ -3,9 +3,9 @@ import { useState } from 'react';
 import { Image, Pressable, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
-import { AuthEmail } from '../utils/API/Auth';
+import { AuthEmail } from '../utils/API/AutAPI';
 import { isValidEmail } from '../utils/RegularExpression';
-import { useEmailStore } from '../zustand/store';
+import { useAuthTokenStore, useEmailStore } from '../zustand/store';
 
 const AuthEmailScreen = () => {
   // Logic
@@ -16,6 +16,7 @@ const AuthEmailScreen = () => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const setEmailInStore = useEmailStore(state => state.setEmail);
+  const setAuthTokenStore = useAuthTokenStore(state => state.setToken);
 
   const isEmailValid = isValidEmail(email);
 
@@ -69,7 +70,8 @@ const AuthEmailScreen = () => {
           autoCapitalize="none"
           keyboardType="email-address"
           onSubmitEditing={() =>
-            isEmailValid && AuthEmail(email, setEmailInStore, navigation)
+            isEmailValid &&
+            AuthEmail(email, setEmailInStore, setAuthTokenStore, navigation)
           }
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
@@ -99,7 +101,8 @@ const AuthEmailScreen = () => {
           borderRadius: 10,
         }}
         onPress={() =>
-          isEmailValid && AuthEmail(email, setEmailInStore, navigation)
+          isEmailValid &&
+          AuthEmail(email, setEmailInStore, setAuthTokenStore, navigation)
         }
         disabled={!isEmailValid}>
         <Text

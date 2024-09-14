@@ -1,6 +1,7 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
+  ColorValue,
   Image,
   Platform,
   Pressable,
@@ -11,7 +12,8 @@ import {
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import OTPTextView from 'react-native-otp-textinput';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
-import { AuthCode } from '../utils/API/AutAPI';
+import { AuthCode, AuthEmail } from '../utils/API/AutAPI';
+import { formatTime } from '../utils/common';
 import { isValidCode } from '../utils/RegularExpression';
 import { useAuthTokenStore, useEmailStore } from '../zustand/store';
 
@@ -20,17 +22,48 @@ const AuthCodeScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<ROOT_NAVIGATION>>();
 
-    const email = useEmailStore(state => state.email);
-    const token = useAuthTokenStore(state => state.token);
-
   const [code, setCode] = useState<string>('');
+  const [timer, setTimer] = useState<number>(300);
+  const [errMsg, setErrMsg] = useState<string | null>(null);
+  const [color, setColor] = useState<ColorValue>();
+
   const inputRef = useRef<OTPTextView>(null);
 
-  const clearCode = () => inputRef.current?.clear();
-
-  const setAuthTokenStore = useAuthTokenStore(state => state.setToken);
-  
   const isCodeValid = isValidCode(code);
+
+  const email = useEmailStore(state => state.email);
+  const token = useAuthTokenStore(state => state.token);
+
+  const setEmailInStore = useEmailStore(state => state.setEmail);
+  const setAuthTokenStore = useAuthTokenStore(state => state.setToken);
+
+  const clearCode = () => {
+    inputRef.current?.clear();
+    setTimer(300);
+    AuthEmail(
+      email,
+      setErrMsg,
+      setEmailInStore,
+      setAuthTokenStore,
+      setColor,
+      navigation,
+    );
+  }
+
+  useEffect(() => {
+    let interval = setInterval(() => {
+      setTimer(prevTimer => {
+        if (prevTimer <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return prevTimer - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
 
   // View
   return (
@@ -77,7 +110,15 @@ const AuthCodeScreen = () => {
         offTintColor="#f4f4f4"
         onSubmitEditing={() =>
           isCodeValid &&
-          AuthCode(email, code, token, setAuthTokenStore, navigation)
+          AuthCode(
+            email,
+            code,
+            token,
+            setErrMsg,
+            setColor,
+            setAuthTokenStore,
+            navigation,
+          )
         }
       />
 
@@ -85,10 +126,21 @@ const AuthCodeScreen = () => {
         style={{
           fontSize: 14,
           color: '#287BF3',
-          marginBottom: Platform.OS === 'ios' ? 70 : 100,
+          marginBottom: 5,
         }}>
-        5: 00
+        {formatTime(timer)}
       </Text>
+
+      {errMsg && (
+        <Text
+          style={{
+            marginBottom: Platform.OS === 'ios' ? 70 : 100,
+            fontSize: 16,
+            color: '#F33A28',
+          }}>
+          {errMsg}
+        </Text>
+      )}
 
       <TouchableOpacity
         style={{
@@ -110,7 +162,15 @@ const AuthCodeScreen = () => {
         }}
         onPress={() =>
           isCodeValid &&
-          AuthCode(email, code, token, setAuthTokenStore, navigation)
+          AuthCode(
+            email,
+            code,
+            token,
+            setErrMsg,
+            setColor,
+            setAuthTokenStore,
+            navigation,
+          )
         }
         disabled={!isCodeValid}>
         <Text

@@ -1,19 +1,21 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
+  BackHandler,
+  ColorValue,
   Image,
   Platform,
   Pressable,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
-import { Register } from '../utils/API/AutAPI';
+import { Register, VerifyNickName } from '../utils/API/AutAPI';
 import { isValidNickName, isValidPassword } from '../utils/RegularExpression';
-import { useEmailStore } from '../zustand/store';
+import { useAuthTokenStore, useEmailStore } from '../zustand/store';
 
 const RegisterScreen = () => {
   // Logic
@@ -28,11 +30,14 @@ const RegisterScreen = () => {
   const [isPwd2Focused, setIsPwd2Focused] = useState<boolean>(false);
   const [isPwd1Visible, setIsPwd1Visible] = useState<boolean>(true);
   const [isPwd2Visible, setIsPwd2Visible] = useState<boolean>(true);
+  const [errMsg, setErrMsg] = useState<string | null>(null);
+  const [color, setColor] = useState<ColorValue>();
 
   const password1Ref = useRef<TextInput>(null);
   const password2Ref = useRef<TextInput>(null);
 
   const email = useEmailStore(state => state.email);
+  const token = useAuthTokenStore(state => state.token);
 
   const isNickNameValid = isValidNickName(nickname);
   const isPassWordValid = pwd1 === pwd2 ? isValidPassword(pwd2) : false;
@@ -48,6 +53,22 @@ const RegisterScreen = () => {
       password2Ref.current.focus();
     }
   };
+
+  useEffect(() => {
+    // BackHandler for Android hardware back button
+    const backAction = () => {
+      navigation.navigate('AuthEmail');
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    // Clean up the event listener when the component is unmounted
+    return () => backHandler.remove();
+  }, [navigation]);
 
   // View
   return (
@@ -89,7 +110,11 @@ const RegisterScreen = () => {
         </Text>
 
         <Pressable
-          style={{backgroundColor: '#287BF3', borderRadius: 5, padding: 5}}>
+          style={{backgroundColor: '#287BF3', borderRadius: 5, padding: 5}}
+          onPress={() =>
+            isNickNameValid &&
+            VerifyNickName(nickname, token, setErrMsg, setColor)
+          }>
           <Text style={{fontSize: 12, color: 'white'}}>중복 확인</Text>
         </Pressable>
       </View>
@@ -133,9 +158,16 @@ const RegisterScreen = () => {
         </View>
       </View>
 
-      <Text style={{fontSize: 16, color: '#287BF3', marginBottom: 20}}>
-        사용 가능한 닉네임 입니다.
-      </Text>
+      {errMsg && (
+        <Text
+          style={{
+            fontSize: 16,
+            color: color,
+            marginBottom: 20,
+          }}>
+          {errMsg}
+        </Text>
+      )}
 
       <Text
         style={{
@@ -255,7 +287,8 @@ const RegisterScreen = () => {
           height: 55,
           borderBottomWidth: 3,
           borderColor: isPwd2Focused ? '#287BF3' : '#f4f4f4',
-          marginBottom: Platform.OS === 'ios' ? 30 : 70,
+          marginBottom: 5,
+          // marginBottom: Platform.OS === 'ios' ? 30 : 70,
         }}>
         <TextInput
           ref={password2Ref}
@@ -269,7 +302,7 @@ const RegisterScreen = () => {
           onSubmitEditing={() =>
             isNickNameValid &&
             isPassWordValid &&
-            Register(nickname, email, pwd2, navigation)
+            Register(nickname, email, pwd2, token, navigation)
           }
           onFocus={() => setIsPwd2Focused(true)}
           onBlur={() => setIsPwd2Focused(false)}
@@ -303,6 +336,16 @@ const RegisterScreen = () => {
         </View>
       </View>
 
+      {pwd1 !== pwd2 && (
+        <Text
+          style={{
+            marginBottom: Platform.OS === 'ios' ? 30 : 70,
+            color: '#F33A28',
+          }}>
+          비밀번호가 일치하지 않습니다.
+        </Text>
+      )}
+
       <Pressable
         style={{
           width: '100%',
@@ -316,7 +359,7 @@ const RegisterScreen = () => {
         onPress={() =>
           isNickNameValid &&
           isPassWordValid &&
-          Register(nickname, email, pwd2, navigation)
+          Register(nickname, email, pwd2, token, navigation)
         }
         disabled={!isNickNameValid || !isPassWordValid}>
         <Text

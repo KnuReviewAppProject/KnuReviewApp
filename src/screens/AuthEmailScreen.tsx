@@ -1,6 +1,14 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useState } from 'react';
-import { Image, Pressable, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  ColorValue,
+  Image,
+  Pressable,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { AuthEmail } from '../utils/API/AutAPI';
@@ -14,11 +22,14 @@ const AuthEmailScreen = () => {
 
   const [email, setEmail] = useState<string>('');
   const [isFocused, setIsFocused] = useState<boolean>(false);
+  const [errMsg, setErrMsg] = useState<string | null>(null);
+  const [color, setColor] = useState<ColorValue>();
+
+
+  const isEmailValid = isValidEmail(email);
 
   const setEmailInStore = useEmailStore(state => state.setEmail);
   const setAuthTokenStore = useAuthTokenStore(state => state.setToken);
-
-  const isEmailValid = isValidEmail(email);
 
   // View
   return (
@@ -58,7 +69,7 @@ const AuthEmailScreen = () => {
           justifyContent: 'space-between',
           alignItems: 'center',
           height: 55,
-          marginBottom: 100,
+          marginBottom: 5,
           borderBottomWidth: 3,
           borderColor: isFocused ? '#287BF3' : '#f4f4f4',
         }}>
@@ -71,7 +82,14 @@ const AuthEmailScreen = () => {
           keyboardType="email-address"
           onSubmitEditing={() =>
             isEmailValid &&
-            AuthEmail(email, setEmailInStore, setAuthTokenStore, navigation)
+            AuthEmail(
+              email,
+              setErrMsg,
+              setEmailInStore,
+              setAuthTokenStore,
+              setColor,
+              navigation,
+            )
           }
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
@@ -92,6 +110,12 @@ const AuthEmailScreen = () => {
         </View>
       </View>
 
+      {errMsg && (
+        <Text style={{marginBottom: 100, fontSize: 16, color: color}}>
+          {errMsg}
+        </Text>
+      )}
+
       <Pressable
         style={{
           height: 55,
@@ -102,7 +126,14 @@ const AuthEmailScreen = () => {
         }}
         onPress={() =>
           isEmailValid &&
-          AuthEmail(email, setEmailInStore, setAuthTokenStore, navigation)
+          AuthEmail(
+            email,
+            setErrMsg,
+            setEmailInStore,
+            setAuthTokenStore,
+            setColor,
+            navigation,
+          )
         }
         disabled={!isEmailValid}>
         <Text

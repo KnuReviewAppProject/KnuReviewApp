@@ -8,9 +8,34 @@ export const API_URL = Platform.OS === 'ios' ? IOS_API_URL : ANDROID_API_URL;
 export const Login = (
   email: string,
   password: string,
+  // token: string,
   navigation: NativeStackNavigationProp<ROOT_NAVIGATION>,
 ) => {
-  console.log('로그인 성공');
+  if (!email || !email.trim()) {
+    Alert.alert('입력', '이메일을 입력해주세요.');
+  }
+
+  if (!password || !password.trim()) {
+    Alert.alert('입력', '비밀번호를 입력해주세요.');
+  }
+
+  try {
+    axios
+      .post(`${API_URL}/api/login`, {
+        email: email,
+        password: password,
+        // token: token,
+      })
+      .then(res => {
+        console.log(res.status);
+        console.log(res.data);
+      })
+      .catch(err => {
+        console.log('try 에러: ', err);
+      });
+  } catch (error) {
+    console.log('catch 에러: ', error);
+  }
 };
 
 export const AuthEmail = (

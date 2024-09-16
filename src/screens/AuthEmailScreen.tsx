@@ -1,5 +1,6 @@
+import { HeaderBackButton } from '@react-navigation/elements';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   ColorValue,
   Image,
@@ -14,6 +15,7 @@ import useNavigation from '../../node_modules/@react-navigation/core/src/useNavi
 import { AuthEmail } from '../utils/API/AutAPI';
 import { isValidEmail } from '../utils/RegularExpression';
 import { useAuthTokenStore, useEmailStore } from '../zustand/store';
+
 
 const AuthEmailScreen = () => {
   // Logic
@@ -30,6 +32,20 @@ const AuthEmailScreen = () => {
 
   const setEmailInStore = useEmailStore(state => state.setEmail);
   const setAuthTokenStore = useAuthTokenStore(state => state.setToken);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerShadowVisible: false,
+      headerTitle: '',
+      headerLeft: props => (
+        <HeaderBackButton
+          {...props}
+          onPress={() => navigation.goBack()}
+          labelVisible={false}
+        />
+      ),
+    });
+  })
 
   // View
   return (

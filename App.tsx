@@ -6,12 +6,12 @@ import AuthEmailScreen from './src/screens/AuthEmailScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
 
-
 const Stack = createNativeStackNavigator<ROOT_NAVIGATION>();
+
 
 const App = () => {
   // Logic
-
+    
   // View
   return (
     <NavigationContainer>
@@ -25,31 +25,16 @@ const App = () => {
         <Stack.Screen
           name="AuthEmail"
           component={AuthEmailScreen}
-          options={{
-            headerShadowVisible: false,
-            headerBackTitleVisible: false,
-            headerTitle: '',
-          }}
         />
 
         <Stack.Screen
           name="AuthCode"
           component={AuthCodeScreen}
-          options={{
-            headerShadowVisible: false,
-            headerBackTitleVisible: false,
-            headerTitle: '',
-          }}
         />
 
         <Stack.Screen
           name="Register"
           component={RegisterScreen}
-          options={{
-            headerShadowVisible: false,
-            headerBackTitleVisible: false,
-            headerTitle: '',
-          }}
         />
       </Stack.Navigator>
     </NavigationContainer>

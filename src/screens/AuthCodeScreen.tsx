@@ -1,3 +1,4 @@
+import { HeaderBackButton } from '@react-navigation/elements';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -49,6 +50,20 @@ const AuthCodeScreen = () => {
       navigation,
     );
   }
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerShadowVisible: false,
+      headerTitle: '',
+      headerLeft: props => (
+        <HeaderBackButton
+          {...props}
+          onPress={() => navigation.goBack()}
+          labelVisible={false}
+        />
+      ),
+    });
+  })
 
   useEffect(() => {
     let interval = setInterval(() => {

@@ -1,7 +1,7 @@
+import { HeaderBackButton } from '@react-navigation/elements';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  BackHandler,
   ColorValue,
   Image,
   Platform,
@@ -55,20 +55,20 @@ const RegisterScreen = () => {
   };
 
   useEffect(() => {
-    // BackHandler for Android hardware back button
-    const backAction = () => {
-      navigation.navigate('AuthEmail');
-      return true;
-    };
-
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction,
-    );
-
-    // Clean up the event listener when the component is unmounted
-    return () => backHandler.remove();
-  }, [navigation]);
+    navigation.setOptions({
+      headerShadowVisible: false,
+      headerBackTitleVisible: true,
+      headerBackTitle: '',
+      headerTitle: '',
+      headerLeft: props => (
+        <HeaderBackButton
+          {...props}
+          onPress={() => navigation.navigate('AuthEmail')}
+          labelVisible={false}
+        />
+      ),
+    });
+  })
 
   // View
   return (

@@ -3,4 +3,5 @@ declare type ROOT_NAVIGATION = {
     AuthEmail: undefined;
     AuthCode: undefined;
     Register: undefined;
+    SignupFinish: undefined;
 }

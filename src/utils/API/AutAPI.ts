@@ -1,4 +1,5 @@
 import { ANDROID_API_URL, IOS_API_URL } from '@env';
+import { firebase } from '@react-native-firebase/auth';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import axios from 'axios';
 import { Alert, Platform } from 'react-native';
@@ -20,19 +21,19 @@ export const Login = (
   }
 
   try {
-    axios
-      .post(`${API_URL}/api/login`, {
-        email: email,
-        password: password,
-        // token: token,
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(result => {
+        const user = result.user;
+        axios
+          .post(`${API_URL}/api/login`, {
+            uid: user.uid,
+          })
+          .then(res => console.log(res.data))
+          .catch(err => console.log(err));
       })
-      .then(res => {
-        console.log(res.status);
-        console.log(res.data);
-      })
-      .catch(err => {
-        console.log('try 에러: ', err);
-      });
+      .catch(err => console.log(err));
   } catch (error) {
     console.log('catch 에러: ', error);
   }
@@ -196,7 +197,7 @@ export const Register = (
       .then(res => {
         console.log(res.status);
         console.log(res.data);
-        navigation.navigate('Login');
+        navigation.navigate('SignupFinish');
       })
       .catch(err => {
         if (err.response) {

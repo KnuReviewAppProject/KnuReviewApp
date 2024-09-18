@@ -30,7 +30,10 @@ export const Login = (
           .post(`${API_URL}/api/login`, {
             uid: user.uid,
           })
-          .then(res => console.log(res.data))
+          .then(res => {
+            console.log(res.data);
+            navigation.navigate('LocationMapTabs');
+          })
           .catch(err => console.log(err));
       })
       .catch(err => console.log(err));

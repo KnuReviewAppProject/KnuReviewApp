@@ -16,6 +16,10 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
+# Enable New Architecture (Fabric) and Hermes
+$new_architecture_enabled = true # Fabric 활성화
+$hermes_enabled = true           # Hermes 활성화
+
 target 'KnuReviewApp' do
   config = use_native_modules!
   pod 'GoogleUtilities', :modular_headers => true
@@ -24,7 +28,9 @@ target 'KnuReviewApp' do
   use_react_native!(
     :path => config[:reactNativePath],
     # An absolute path to your application root.
-    :app_path => "#{Pod::Config.instance.installation_root}/.."
+    :app_path => "#{Pod::Config.instance.installation_root}/..",
+    :hermes_enabled => $hermes_enabled, # Fabric 활성화
+    :fabric_enabled => $new_architecture_enabled # Fabric 활성화
   )
 
   target 'KnuReviewAppTests' do

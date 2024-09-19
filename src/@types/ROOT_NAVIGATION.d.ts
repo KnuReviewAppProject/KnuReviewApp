@@ -6,4 +6,5 @@ declare type ROOT_NAVIGATION = {
   SignupFinish: undefined;
   Tabs: undefined;
   LocationMapTabs: undefined;
+  ProfileTabs: undefined;
 };

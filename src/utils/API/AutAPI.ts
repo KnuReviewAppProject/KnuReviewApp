@@ -32,7 +32,7 @@ export const Login = (
           })
           .then(res => {
             console.log(res.data);
-            navigation.navigate('LocationMapTabs');
+            navigation.navigate('Tabs');
           })
           .catch(err => console.log(err));
       })

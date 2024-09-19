@@ -30,7 +30,11 @@ const Stacks = () => {
         options={{headerShown: false}}
       />
 
-      <Stack.Screen name="Tabs" component={Tabs} />
+      <Stack.Screen
+        name="Tabs"
+        component={Tabs}
+        options={{gestureEnabled: false, headerShown: false}}
+      />
     </Stack.Navigator>
   );
 };

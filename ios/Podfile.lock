@@ -2696,6 +2696,8 @@ PODS:
     - Firebase/Storage (= 10.29.0)
     - React-Core
     - RNFBApp
+  - RNPermissions (2.2.0):
+    - React
   - RNScreens (3.34.0):
     - DoubleConversion
     - glog
@@ -2793,6 +2795,7 @@ DEPENDENCIES:
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
   - "RNFBFunctions (from `../node_modules/@react-native-firebase/functions`)"
   - "RNFBStorage (from `../node_modules/@react-native-firebase/storage`)"
+  - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -2963,6 +2966,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/functions"
   RNFBStorage:
     :path: "../node_modules/@react-native-firebase/storage"
+  RNPermissions:
+    :path: "../node_modules/react-native-permissions"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   Yoga:
@@ -3062,6 +3067,7 @@ SPEC CHECKSUMS:
   RNFBFirestore: c6f4790ed5b6e78da008c906657571be3800270b
   RNFBFunctions: 1d79ba7f38d1c3b5d9935e5571fc3acdac36a458
   RNFBStorage: 8205594d55159088d8c5005e9bfe2a3a1673bf59
+  RNPermissions: 477d88d0be7ecb0a7b344e4d5fbb0352de104626
   RNScreens: de55b9d7de8a017d1588dcb70415492d0b0597c2
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Yoga: c6584ec444ef4aee46e0575049f90cd2aab1e6ed

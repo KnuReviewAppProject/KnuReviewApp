@@ -4,7 +4,6 @@ import Navigator from './src/navigation/Navigator';
 
 const App = () => {
   // Logic
-    
   // View
   return (
     <NavigationContainer>

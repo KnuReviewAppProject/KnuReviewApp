@@ -3087,7 +3087,7 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 5aea5ba6bd522a239e236100971f10cb71b96ab6
   hermes-engine: 3b6e0717ca847e2fc90a201e59db36caf04dee88
   leveldb-library: e8eadf9008a61f9e1dde3978c086d2b6d9b9dc28
-  mj-studio-react-native-naver-map: 7e41b7e35fb1266a37190f272980bd6bab0e78b
+  mj-studio-react-native-naver-map: 7e41b7e35fb1266a37190f272980bd6bab0e78b4
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
   NMapsGeometry: 4e02554fa9880ef02ed96b075dc84355d6352479
   NMapsMap: 36dc18a1f5f315121b33fccd2398c7a702bf0fc8
@@ -3154,10 +3154,11 @@ SPEC CHECKSUMS:
   RNFBFirestore: c6f4790ed5b6e78da008c906657571be3800270b
   RNFBFunctions: 1d79ba7f38d1c3b5d9935e5571fc3acdac36a458
   RNFBStorage: 8205594d55159088d8c5005e9bfe2a3a1673bf59
+  RNPermissions: 477d88d0be7ecb0a7b344e4d5fbb0352de104626
   RNScreens: 47d5b0b48402f5a2da5b2dd543deae3c9083a5ac
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Yoga: c6584ec444ef4aee46e0575049f90cd2aab1e6ed
 
-PODFILE CHECKSUM: 44c66033c600648d3da17100f7952d97110d7439
+PODFILE CHECKSUM: 4a0e52ccea4853e374e5fe8c687a6d89490b7a97
 
 COCOAPODS: 1.15.2

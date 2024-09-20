@@ -1,5 +1,5 @@
-import { NaverMapView, Region } from '@mj-studio/react-native-naver-map';
-import React from 'react';
+import { NaverMapPathOverlay, NaverMapPolygonOverlay, NaverMapView, NaverMapViewRef, Region } from '@mj-studio/react-native-naver-map';
+import React, { useRef } from 'react';
 import { View } from 'react-native';
 
 const LocationMapScreen = () => {
@@ -10,6 +10,8 @@ const LocationMapScreen = () => {
     latitudeDelta: 0.38,
     longitudeDelta: 0.8,
   };
+
+  const NaverMapViewRef = useRef<NaverMapViewRef>(null);
 
   // View
   return (

@@ -1,5 +1,4 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native-stack';
 import React from 'react';
 import AuthCodeScreen from './src/screens/AuthCodeScreen';
 import AuthEmailScreen from './src/screens/AuthEmailScreen';

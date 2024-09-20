@@ -4,4 +4,7 @@ declare type ROOT_NAVIGATION = {
     AuthCode: undefined;
     Register: undefined;
     SignupFinish: undefined;
+    Tabs: undefined;
+    LocationMapTabs: undefined;
+    ProfileTabs: undefined;
 }

@@ -11,15 +11,18 @@ const Tabs = () => {
     <Tab.Navigator
       initialRouteName="LocationMapTabs"
       screenOptions={{headerShown: false}}>
+
       <Tab.Screen
         name="LocationMapTabs"
         component={LocationMapScreen}
         options={{
+          headerShown: false,
           tabBarLabel: '지도',
           tabBarIcon: ({color, size}) => (
             <Image
               source={require('../assets/location.png')}
-              style={{width: size, height: size, tintColor: color}}
+              style={{tintColor: color, width: size, height: size}}
+              resizeMode="contain"
             />
           ),
         }}
@@ -28,17 +31,19 @@ const Tabs = () => {
         name="ProfileTabs"
         component={ProfileScreen}
         options={{
+          headerShown: false,
           tabBarLabel: '프로필',
           tabBarIcon: ({color, size}) => (
             <Image
               source={require('../assets/profile.png')}
-              style={{width: size, height: size, tintColor: color}}
+              style={{tintColor: color, width: size, height: size}}
+              resizeMode="contain"
             />
           ),
         }}
       />
     </Tab.Navigator>
   );
-}
+};
 
-export default Tabs
+export default Tabs;

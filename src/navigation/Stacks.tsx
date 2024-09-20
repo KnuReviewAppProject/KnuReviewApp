@@ -1,8 +1,4 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
-const Stack = createNativeStackNavigator<ROOT_NAVIGATION>();
-
-
 import React from 'react';
 import AuthCodeScreen from '../screens/AuthCodeScreen';
 import AuthEmailScreen from '../screens/AuthEmailScreen';
@@ -10,6 +6,8 @@ import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import SignupFinishedScreen from '../screens/SignupFinishedScreen';
 import Tabs from './Tabs';
+
+const Stack = createNativeStackNavigator<ROOT_NAVIGATION>();
 
 const Stacks = () => {
   return (
@@ -35,10 +33,10 @@ const Stacks = () => {
       <Stack.Screen
         name="Tabs"
         component={Tabs}
-        options={{headerShown: false, gestureEnabled: false}}
+        options={{gestureEnabled: false, headerShown: false}}
       />
     </Stack.Navigator>
   );
-}
+};
 
-export default Stacks
+export default Stacks;

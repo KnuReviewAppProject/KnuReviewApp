@@ -115,6 +115,9 @@ dependencies {
     // 네이버 지도 SDK
     implementation 'com.naver.maps:map-sdk:3.19.1'
 
+    // Naver Map SDK
+    implementation("com.naver.maps:map-sdk:3.19.1")
+
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {

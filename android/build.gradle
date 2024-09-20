@@ -10,6 +10,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        
     }
     dependencies {
         classpath("com.android.tools.build:gradle")
@@ -23,8 +24,9 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        // 네이버 지도 저장소
         maven {
-            url "https://repository.map.naver.com/archive/maven"
+            url 'https://repository.map.naver.com/archive/maven'
         }
     }
 }

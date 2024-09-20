@@ -10,7 +10,7 @@ const ProfileScreen = () => {
         alignItems: 'center',
         backgroundColor: 'white',
       }}>
-      <Text>Profile Screen</Text>
+      <Text>ProfileScreen</Text>
     </View>
   );
 }

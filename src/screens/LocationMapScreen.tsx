@@ -1,16 +1,9 @@
-import {
-  NaverMapPathOverlay,
-  NaverMapPolygonOverlay,
-  NaverMapView,
-  NaverMapViewRef,
-  Region,
-} from '@mj-studio/react-native-naver-map';
-import React, { useRef } from 'react';
+import { NaverMapView, Region } from '@mj-studio/react-native-naver-map';
+import React from 'react';
 import { View } from 'react-native';
 
 const LocationMapScreen = () => {
   // Logic
-  const NaverMapViewRef = useRef<NaverMapViewRef>(null);
   const jejuRegion: Region = {
     latitude: 33.20530773,
     longitude: 126.14656715029,

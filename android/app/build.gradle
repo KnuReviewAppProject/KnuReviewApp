@@ -111,6 +111,9 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+    
+    // 네이버 지도 SDK
+    implementation 'com.naver.maps:map-sdk:3.19.1'
 
     // Naver Map SDK
     implementation("com.naver.maps:map-sdk:3.19.1")

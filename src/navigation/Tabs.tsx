@@ -1,4 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import React from 'react';
 import { Image } from 'react-native';
 import LocationMapScreen from '../screens/LocationMapScreen';
 import ProfileScreen from '../screens/ProfileScreen';
@@ -7,7 +8,10 @@ const Tab = createBottomTabNavigator<ROOT_NAVIGATION>();
 
 const Tabs = () => {
   return (
-    <Tab.Navigator initialRouteName="LocationMapTabs">
+    <Tab.Navigator
+      initialRouteName="LocationMapTabs"
+      screenOptions={{headerShown: false}}>
+
       <Tab.Screen
         name="LocationMapTabs"
         component={LocationMapScreen}

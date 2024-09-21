@@ -7,9 +7,9 @@ const App = () => {
 
   // View
   return (
-    <NavigationContainer>
-      <Navigator />
-    </NavigationContainer>
+      <NavigationContainer>
+        <Navigator />
+      </NavigationContainer>
   );
 };
 

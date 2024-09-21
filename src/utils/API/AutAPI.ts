@@ -4,7 +4,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import axios from 'axios';
 import { Alert, Platform } from 'react-native';
 
-export const API_URL = Platform.OS === 'ios' ? IOS_API_URL : ANDROID_API_URL;
+const API_URL = Platform.OS === 'ios' ? IOS_API_URL : ANDROID_API_URL;
 
 export const Login = (
   email: string,

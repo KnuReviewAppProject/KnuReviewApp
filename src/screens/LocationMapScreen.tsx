@@ -1,3 +1,4 @@
+import { formatJson, generateArray } from '@mj-studio/js-util';
 import {
   Camera,
   ClusterMarkerProp,
@@ -65,11 +66,11 @@ const LocationMapScreen = () => {
       height?: number;
     }[]
   >(() => {
-    return restaurants.map(i => {
+    return generateArray(5).map(i => {
       return {
         width: 200,
         height: 200,
-        markers: restaurants.map<ClusterMarkerProp>(
+        markers: generateArray(restaurants.length).map<ClusterMarkerProp>(
           j =>
             ({
               image: {
@@ -77,8 +78,8 @@ const LocationMapScreen = () => {
               },
               width: 100,
               height: 100,
-              latitude: Cameras.KNU.latitude + Math.random() + 1.5,
-              longitude: Cameras.KNU.longitude + Math.random() + 1.5,
+              latitude: Cameras.KNU.latitude,
+              longitude: Cameras.KNU.longitude,
               identifier: `${hash}-${i}-${j}`,
             } satisfies ClusterMarkerProp),
         ),
@@ -128,7 +129,9 @@ const LocationMapScreen = () => {
         onInitialized={() => console.log('initialized!')}
         onTapClusterLeaf={({markerIdentifier}) => {
           console.log('onTapClusterLeaf', markerIdentifier);
-        }}>
+        }}
+        onTapMap={(args) => console.log(`Map Tapped: ${formatJson(args)}`)}
+        >
         {restaurants.map((restaurant, index) => (
           <NaverMapMarkerOverlay
             key={restaurant.id}

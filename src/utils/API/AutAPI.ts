@@ -9,7 +9,6 @@ const API_URL = Platform.OS === 'ios' ? IOS_API_URL : ANDROID_API_URL;
 export const Login = (
   email: string,
   password: string,
-  // token: string,
   navigation: NativeStackNavigationProp<ROOT_NAVIGATION>,
 ) => {
   if (!email || !email.trim()) {
@@ -217,5 +216,22 @@ export const Register = (
       });
   } catch (error) {
     console.error(error);
+  }
+};
+
+export const Logout = (
+  navigation: NativeStackNavigationProp<ROOT_NAVIGATION>,
+) => {
+  try {
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        console.log('로그아웃');
+        navigation.navigate('Login');
+      })
+      .catch(err => console.log('try 에러: ', err));
+  } catch (error) {
+    console.log(error);
   }
 };

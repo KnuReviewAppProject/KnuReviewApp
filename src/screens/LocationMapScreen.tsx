@@ -70,7 +70,7 @@ const LocationMapScreen = () => {
       return {
         width: 200,
         height: 200,
-        markers: generateArray(restaurants.length).map<ClusterMarkerProp>(
+        markers: generateArray(3).map<ClusterMarkerProp>(
           j =>
             ({
               image: {

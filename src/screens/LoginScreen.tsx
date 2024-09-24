@@ -1,18 +1,19 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useRef, useState } from 'react';
 import {
-    Image,
-    Pressable,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Image,
+  Pressable,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { Login } from '../utils/API/AutAPI';
+import { useUidStore } from '../zustand/store';
 
 const LoginScreen = () => {
   // Logic
@@ -25,6 +26,8 @@ const LoginScreen = () => {
 
   const navigation =
     useNavigation<NativeStackNavigationProp<ROOT_NAVIGATION>>();
+
+  const setUidStore = useUidStore(state => state.setUid);
 
   const handleEmailSubmit = () => {
     if (inputRef.current) {
@@ -117,7 +120,7 @@ const LoginScreen = () => {
             returnKeyType="next"
             keyboardType="visible-password"
             secureTextEntry={isVisible}
-            onSubmitEditing={() => Login(email, pwd, navigation)}
+            onSubmitEditing={() => Login(email, pwd, navigation, setUidStore)}
             style={{flex: 1, paddingVertical: 0}}
           />
           <View>
@@ -180,7 +183,7 @@ const LoginScreen = () => {
             borderRadius: 10,
             marginBottom: 15,
           }}
-          onPress={() => Login(email, pwd, navigation)}>
+          onPress={() => Login(email, pwd, navigation, setUidStore)}>
           <Text style={{color: 'white', fontWeight: 'bold', fontSize: 16}}>
             로그인
           </Text>

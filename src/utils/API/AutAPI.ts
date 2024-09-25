@@ -11,6 +11,7 @@ export const Login = (
   password: string,
   navigation: NativeStackNavigationProp<ROOT_NAVIGATION>,
   setUidStore: (uid: string) => void,
+  setEmailStore: (email: string) => void,
 ) => {
   if (!email || !email.trim()) {
     Alert.alert('입력', '이메일을 입력해주세요.');
@@ -33,6 +34,7 @@ export const Login = (
           .then(res => {
             console.log(res.data);
             setUidStore(user.uid);
+            setEmailStore(res.data.email);
             navigation.navigate('Tabs');
           })
           .catch(err => console.log(err));
@@ -240,11 +242,15 @@ export const Logout = (
 
 export const Unsubscribe = (
   uid: string,
+  email: string,
   navigation: NativeStackNavigationProp<ROOT_NAVIGATION>,
 ) => {
   try {
     axios
-      .post(`${API_URL}/api/delete-account`, {uid: uid})
+      .post(`${API_URL}/api/delete-account`, {
+        uid: uid,
+        email: email
+      })
       .then(() => {
         navigation.navigate('Login');
       })

@@ -3,7 +3,7 @@ import React from 'react';
 import { Image, Pressable, Text, View } from 'react-native';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { Logout, Unsubscribe } from '../utils/API/AutAPI';
-import { useUidStore } from '../zustand/store';
+import { useEmailStore, useUidStore } from '../zustand/store';
 
 const ProfileScreen = () => {
   // Logic
@@ -11,6 +11,7 @@ const ProfileScreen = () => {
     useNavigation<NativeStackNavigationProp<ROOT_NAVIGATION>>();
 
   const uid = useUidStore(state => state.uid);
+  const email = useEmailStore(state => state.email);
 
   // View
   return (
@@ -175,7 +176,7 @@ const ProfileScreen = () => {
           paddingHorizontal: 30,
           marginBottom: 17,
         }}
-        onPress={() => Unsubscribe(uid, navigation)}>
+        onPress={() => Unsubscribe(uid, email, navigation)}>
         <Image
           source={require('../assets/unsubscribe.png')}
           style={{width: 24, height: 24, marginRight: 15}}

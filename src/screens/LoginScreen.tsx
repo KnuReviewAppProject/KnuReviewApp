@@ -13,7 +13,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { SafeAreaView } from 'react-native-safe-area-context';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { Login } from '../utils/API/AutAPI';
-import { useUidStore } from '../zustand/store';
+import { useEmailStore, useUidStore } from '../zustand/store';
 
 const LoginScreen = () => {
   // Logic
@@ -28,6 +28,7 @@ const LoginScreen = () => {
     useNavigation<NativeStackNavigationProp<ROOT_NAVIGATION>>();
 
   const setUidStore = useUidStore(state => state.setUid);
+  const setEmailStore = useEmailStore(state => state.setEmail);
 
   const handleEmailSubmit = () => {
     if (inputRef.current) {
@@ -183,7 +184,9 @@ const LoginScreen = () => {
             borderRadius: 10,
             marginBottom: 15,
           }}
-          onPress={() => Login(email, pwd, navigation, setUidStore)}>
+          onPress={() =>
+            Login(email, pwd, navigation, setUidStore, setEmailStore)
+          }>
           <Text style={{color: 'white', fontWeight: 'bold', fontSize: 16}}>
             로그인
           </Text>

@@ -3,15 +3,17 @@ import React from 'react';
 import { Image, Pressable, Text, View } from 'react-native';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { Logout, Unsubscribe } from '../utils/API/AutAPI';
-import { useEmailStore, useUidStore } from '../zustand/store';
+import { useUserStore } from '../zustand/store';
 
 const ProfileScreen = () => {
   // Logic
   const navigation =
     useNavigation<NativeStackNavigationProp<ROOT_NAVIGATION>>();
 
-  const uid = useUidStore(state => state.uid);
-  const email = useEmailStore(state => state.email);
+  const user = useUserStore(state => state.user);
+
+  // const uid = useUidStore(state => state.uid);
+  // const email = useEmailStore(state => state.email);
 
   // View
   return (
@@ -42,8 +44,8 @@ const ProfileScreen = () => {
             source={require('../assets/user.png')}
             resizeMode="contain"
           />
-          <Text style={{fontSize: 28, fontWeight: 'bold', marginRight: 20}}>
-            닉네임
+          <Text style={{fontSize: 16, fontWeight: 'bold', marginRight: 20}}>
+            {user.nickname}
           </Text>
           <Pressable
             style={{
@@ -51,7 +53,8 @@ const ProfileScreen = () => {
               borderRadius: 15,
               paddingHorizontal: 15,
               paddingVertical: 5,
-            }}>
+            }}
+            onPress={() => navigation.navigate('EditProfile')}>
             <Text style={{color: 'white'}}>회원정보 수정</Text>
           </Pressable>
         </View>
@@ -176,7 +179,7 @@ const ProfileScreen = () => {
           paddingHorizontal: 30,
           marginBottom: 17,
         }}
-        onPress={() => Unsubscribe(uid, email, navigation)}>
+        onPress={() => Unsubscribe(user.uid, user.email, navigation)}>
         <Image
           source={require('../assets/unsubscribe.png')}
           style={{width: 24, height: 24, marginRight: 15}}
@@ -193,22 +196,6 @@ const ProfileScreen = () => {
           marginBottom: 17,
         }}
       />
-
-      <Pressable
-        style={{
-          flexDirection: 'row',
-          width: '100%',
-          alignSelf: 'flex-start',
-          alignItems: 'center',
-          paddingHorizontal: 30,
-          marginBottom: 17,
-        }}>
-        <Image
-          source={require('../assets/findpwd.png')}
-          style={{width: 24, height: 24, marginRight: 15}}
-        />
-        <Text style={{fontSize: 20, fontWeight: 'regular'}}>비밀번호 찾기</Text>
-      </Pressable>
     </View>
   );
 };

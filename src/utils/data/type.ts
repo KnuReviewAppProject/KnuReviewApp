@@ -13,3 +13,12 @@ export type Restaurant = {
   options?: string;
   businessHours?: string;
 };
+
+// User 타입 정의
+export type User = {
+  accessToken: string,
+  uid: string,
+  email: string,
+  nickname: string,
+  photoURL: string | null,
+}

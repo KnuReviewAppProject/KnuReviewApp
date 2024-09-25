@@ -3,48 +3,11 @@ import { firebase } from '@react-native-firebase/auth';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import axios from 'axios';
 import { Alert, Platform } from 'react-native';
+import { User } from '../data/type';
 
 const API_URL = Platform.OS === 'ios' ? IOS_API_URL : ANDROID_API_URL;
 
-export const Login = (
-  email: string,
-  password: string,
-  navigation: NativeStackNavigationProp<ROOT_NAVIGATION>,
-  setUidStore: (uid: string) => void,
-  setEmailStore: (email: string) => void,
-) => {
-  if (!email || !email.trim()) {
-    Alert.alert('입력', '이메일을 입력해주세요.');
-  }
-
-  if (!password || !password.trim()) {
-    Alert.alert('입력', '비밀번호를 입력해주세요.');
-  }
-
-  try {
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(result => {
-        const user = result.user;
-        axios
-          .post(`${API_URL}/api/login`, {
-            uid: user.uid,
-          })
-          .then(res => {
-            console.log(res.data);
-            setUidStore(user.uid);
-            setEmailStore(res.data.email);
-            navigation.navigate('Tabs');
-          })
-          .catch(err => console.log(err));
-      })
-      .catch(err => console.log(err));
-  } catch (error) {
-    console.log('catch 에러: ', error);
-  }
-};
-
+// 이메일 중복 여부 판단 api 함수
 export const AuthEmail = (
   email: string,
   setErrMsg: (errMsg: string) => void,
@@ -85,6 +48,7 @@ export const AuthEmail = (
   }
 };
 
+// 인증코드 발송 api 함수
 export const AuthCode = (
   email: string,
   code: string,
@@ -138,6 +102,7 @@ export const AuthCode = (
   }
 };
 
+// 닉네임 중복여부 판단 api 함수
 export const VerifyNickName = (
   nickname: string,
   token: string,
@@ -173,6 +138,7 @@ export const VerifyNickName = (
   }
 };
 
+// 회원가입 api 함수
 export const Register = (
   nickname: string,
   email: string,
@@ -223,6 +189,45 @@ export const Register = (
   }
 };
 
+// 로그인 api 함수
+export const Login = (
+  email: string,
+  password: string,
+  navigation: NativeStackNavigationProp<ROOT_NAVIGATION>,
+  setUserStore: (user: User) => void,
+) => {
+  if (!email || !email.trim()) {
+    Alert.alert('입력', '이메일을 입력해주세요.');
+  }
+
+  if (!password || !password.trim()) {
+    Alert.alert('입력', '비밀번호를 입력해주세요.');
+  }
+
+  try {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(result => {
+        const user = result.user;
+        axios
+          .post(`${API_URL}/api/login`, {
+            uid: user.uid,
+          })
+          .then(res => {
+            console.log(res.data);
+            setUserStore(res.data);
+            navigation.navigate('Tabs');
+          })
+          .catch(err => console.log(err));
+      })
+      .catch(err => console.log(err));
+  } catch (error) {
+    console.log('catch 에러: ', error);
+  }
+};
+
+// 로그아웃 api
 export const Logout = (
   navigation: NativeStackNavigationProp<ROOT_NAVIGATION>,
 ) => {
@@ -240,6 +245,33 @@ export const Logout = (
   }
 };
 
+// 프로필 수정 api
+export const EditProfile = (
+  uid: string,
+  email: string,
+  nickname: string,
+  password: string,
+) => {
+  if(!uid || !email){
+    return Alert.alert('알림', '다시 로그인해주세요.');
+  }
+
+  if(!nickname || !nickname.trim()){
+    return Alert.alert('알림', '닉네임을 입력해주세요.');
+  }
+
+  if(!password || !password.trim()){
+    return Alert.alert('알림', '비밀번호를 입력해주세요.');
+  }
+
+  try {
+    
+  } catch (error) {
+    console.log("catch 에러: ", error);
+  }
+};
+
+// 회원탈퇴 apis
 export const Unsubscribe = (
   uid: string,
   email: string,

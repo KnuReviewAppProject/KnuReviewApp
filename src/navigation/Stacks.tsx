@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import AuthCodeScreen from '../screens/AuthCodeScreen';
 import AuthEmailScreen from '../screens/AuthEmailScreen';
+import EditProfileScreen from '../screens/EditProfileScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import SignupFinishedScreen from '../screens/SignupFinishedScreen';
@@ -28,6 +29,11 @@ const Stacks = () => {
         name="SignupFinish"
         component={SignupFinishedScreen}
         options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="EditProfile"
+        component={EditProfileScreen}
       />
 
       <Stack.Screen

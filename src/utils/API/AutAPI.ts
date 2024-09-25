@@ -251,23 +251,41 @@ export const EditProfile = (
   email: string,
   nickname: string,
   password: string,
+  navigation: NativeStackNavigationProp<ROOT_NAVIGATION>,
 ) => {
-  if(!uid || !email){
+  if (!uid || !email) {
     return Alert.alert('알림', '다시 로그인해주세요.');
   }
 
-  if(!nickname || !nickname.trim()){
+  if (!nickname || !nickname.trim()) {
     return Alert.alert('알림', '닉네임을 입력해주세요.');
   }
 
-  if(!password || !password.trim()){
+  if (!password || !password.trim()) {
     return Alert.alert('알림', '비밀번호를 입력해주세요.');
   }
 
   try {
-    
+    axios
+      .post(`${API_URL}/api/edit-profile`, {
+        uid: uid,
+        email: email,
+        nickname: nickname,
+        password: password,
+      })
+      .then(() => {
+        Alert.alert('프로필 수정', '다시 로그인 해주세요.', [
+          {
+            text: '로그인 하러 가기',
+            onPress: () => {
+              navigation.navigate('Login');
+            },
+          },
+        ]);
+      })
+      .catch(err => console.log('try 에러: ', err));
   } catch (error) {
-    console.log("catch 에러: ", error);
+    console.log('catch 에러: ', error);
   }
 };
 
@@ -281,7 +299,7 @@ export const Unsubscribe = (
     axios
       .post(`${API_URL}/api/delete-account`, {
         uid: uid,
-        email: email
+        email: email,
       })
       .then(() => {
         navigation.navigate('Login');

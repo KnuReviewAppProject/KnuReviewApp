@@ -3,6 +3,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
 import { Image, Platform, Pressable, Text, TextInput, View } from 'react-native';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
+import { EditProfile } from '../utils/API/AutAPI';
 import { isValidNickName, isValidPassword } from '../utils/RegularExpression';
 import { useUserStore } from '../zustand/store';
 
@@ -36,12 +37,16 @@ const EditProfileScreen = () => {
       ),
       headerRight: props => (
         <Pressable
+          {...props}
           style={{
             backgroundColor: '#287BF3',
             borderRadius: 10,
             paddingHorizontal: 10,
             paddingVertical: 5,
-          }}>
+          }}
+          onPress={() =>
+            EditProfile(user.uid, user.email, nickname, pwd2, navigation)
+          }>
           <Text style={{fontSize: 15, color: 'white'}}>수정하기</Text>
         </Pressable>
       ),

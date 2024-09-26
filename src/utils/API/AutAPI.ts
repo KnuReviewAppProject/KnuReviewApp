@@ -278,7 +278,8 @@ export const EditProfile = (
           {
             text: '로그인 하러 가기',
             onPress: () => {
-              navigation.navigate('Login');
+                Logout(navigation);
+              // navigation.navigate('Login');
             },
           },
         ]);

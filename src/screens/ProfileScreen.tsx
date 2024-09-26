@@ -1,6 +1,6 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React from 'react';
-import { Image, Pressable, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { Alert, Image, Pressable, Text, TouchableOpacity, View } from 'react-native';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { Logout, Unsubscribe } from '../utils/API/AutAPI';
 import { useUserStore } from '../zustand/store';
@@ -10,10 +10,14 @@ const ProfileScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<ROOT_NAVIGATION>>();
 
+  const [imageData, setImageData] = useState('');
+
   const user = useUserStore(state => state.user);
 
-  // const uid = useUidStore(state => state.uid);
-  // const email = useEmailStore(state => state.email);
+  const imageSource =
+    user.photoURL !== null
+      ? {uri: user.photoURL}
+      : require('../assets/user.png');
 
   // View
   return (
@@ -34,16 +38,34 @@ const ProfileScreen = () => {
             paddingHorizontal: 20,
             paddingVertical: 20,
           }}>
-          <Image
-            style={{
-              width: 80,
-              height: 80,
-              borderRadius: 50,
-              marginRight: 20,
-            }}
-            source={require('../assets/user.png')}
-            resizeMode="contain"
-          />
+          <TouchableOpacity onPress={() => {
+                    Alert.alert(
+                      '프로필 사진 선택',
+                      '메뉴를 선택해주세요.',
+                      [
+                        {
+                          text: '기본 이미지 설정',
+                          onPress: () => {
+
+                          },
+                        },
+                        {text: '갤러리에서 선택', onPress: () => {}},
+                        {text: '취소', style: 'cancel'},
+                      ],
+                      {cancelable: true},
+                    );
+          }}>
+            <Image
+              style={{
+                width: 80,
+                height: 80,
+                borderRadius: 50,
+                marginRight: 20,
+              }}
+              source={imageSource}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
           <Text style={{fontSize: 16, fontWeight: 'bold', marginRight: 20}}>
             {user.nickname}
           </Text>

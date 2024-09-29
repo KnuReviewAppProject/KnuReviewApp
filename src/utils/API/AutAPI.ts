@@ -1,5 +1,6 @@
 import { ANDROID_API_URL, IOS_API_URL } from '@env';
 import { firebase } from '@react-native-firebase/auth';
+import storage from '@react-native-firebase/storage';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import axios from 'axios';
 import { Alert, Platform } from 'react-native';
@@ -249,9 +250,9 @@ export const Logout = (
 export const EditProfile = (
   uid: string,
   email: string,
-  nickname: string,
-  password: string,
   navigation: NativeStackNavigationProp<ROOT_NAVIGATION>,
+  nickname?: string,
+  password?: string,
 ) => {
   if (!uid || !email) {
     return Alert.alert('알림', '다시 로그인해주세요.');
@@ -278,7 +279,7 @@ export const EditProfile = (
           {
             text: '로그인 하러 가기',
             onPress: () => {
-                Logout(navigation);
+              Logout(navigation);
               // navigation.navigate('Login');
             },
           },
@@ -290,7 +291,70 @@ export const EditProfile = (
   }
 };
 
-// 회원탈퇴 apis
+export const EditProfileImage = (
+  uid: string,
+  email: string,
+  fileName: string,
+  imageURL: string,
+  imageData: string,
+  navigation: NativeStackNavigationProp<ROOT_NAVIGATION>,
+) => {
+  if (!uid || !email) {
+    return Alert.alert('알림', '다시 로그인해주세요.');
+  }
+
+  if (!fileName || !imageURL) {
+    return Alert.alert('알림', '이미지를 선택해주세요.');
+  }
+
+  try {
+    if (Platform.OS === 'android') {
+      storage()
+        .ref(fileName)
+        .putString(imageData)
+        .then(async () => {
+          const downloadURL = await storage().ref(fileName).getDownloadURL();
+          axios
+            .post(`${API_URL}/api/edit-profile-image`, {
+              uid: uid,
+              email: email,
+              imageURL: downloadURL,
+            })
+            .then(res => {
+              if(res.status === 200){
+                navigation.navigate("Login");
+              }
+            })
+            .catch(err => console.log(err));
+        })
+        .catch(err => console.log('try 에러: ', err));
+    } else if (Platform.OS === 'ios') {
+      storage()
+        .ref(fileName)
+        .putFile(imageData)
+        .then(async () => {
+          const downloadURL = await storage().ref(fileName).getDownloadURL();
+          axios
+            .post(`${API_URL}/api/edit-profile-image`, {
+              uid: uid,
+              email: email,
+              imageURL: downloadURL,
+            })
+            .then(res => {
+              if(res.status === 200){
+                navigation.navigate("Login");
+              }
+            })
+            .catch(err => console.log(err));
+        })
+        .catch(err => console.log('try 에러: ', err));
+    }
+  } catch (error) {
+    console.log('error 에러: ', error);
+  }
+};
+
+// 회원탈퇴 api
 export const Unsubscribe = (
   uid: string,
   email: string,

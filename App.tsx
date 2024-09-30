@@ -1,6 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import React, { useEffect } from 'react';
 import { Platform } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { PERMISSIONS, requestMultiple } from "react-native-permissions";
 import Navigator from './src/navigation/Navigator';
 
@@ -38,9 +39,11 @@ const App = () => {
 
   // View
   return (
+    <GestureHandlerRootView style={{flex: 1}}>
       <NavigationContainer>
         <Navigator />
       </NavigationContainer>
+    </GestureHandlerRootView>
   );
 };
 

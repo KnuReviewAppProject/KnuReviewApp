@@ -1,3 +1,4 @@
+import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { formatJson, generateArray } from '@mj-studio/js-util';
 import {
   Camera,
@@ -8,8 +9,9 @@ import {
   NaverMapViewRef,
   Region,
 } from '@mj-studio/react-native-naver-map';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
+import BottomSheetScrollViewRenderItem from '../components/BottomSheetScrollViewRenderItem';
 import { getRestaurants } from '../utils/API/LocationAPI';
 import { Restaurant } from '../utils/data/type';
 
@@ -54,6 +56,9 @@ const LocationMapScreen = () => {
   const [myLocation, setMyLocation] = useState(true);
   const [hash, setHash] = useState(0);
   const [camera, setCamera] = useState(Cameras.KNU);
+  
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const snapPoints = useMemo(() => ['35%', '50%'], []);
 
   const clusters = useMemo<
     {
@@ -87,6 +92,22 @@ const LocationMapScreen = () => {
     });
   }, [hash]);
 
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+
+
+  const handleSheetBackdrop = useCallback(
+    (props: any) => (
+      <BottomSheetBackdrop
+        {...props}
+        pressBehavior="collapse"
+        style={[props.style, {backgroundColor: 'transparent'}]}
+      />
+    ),
+    [],
+  );
+
   useEffect(() => {
     getRestaurants(setRestaurants);
   }, []);
@@ -98,53 +119,67 @@ const LocationMapScreen = () => {
         flex: 1,
         backgroundColor: 'white',
       }}>
-      <NaverMapView
-        style={{flex: 1}}
-        ref={ref}
-        initialCamera={{
-          latitude: 37.271855,
-          longitude: 127.127626,
-          zoom: 15,
-        }}
-        locale="ko"
-        layerGroups={{
-          BUILDING: true,
-          BICYCLE: false,
-          CADASTRAL: false,
-          MOUNTAIN: false,
-          TRAFFIC: false,
-          TRANSIT: false,
-        }}
-        mapType={mapType}
-        initialRegion={Regions.KNU_Region}
-        camera={camera}
-        isIndoorEnabled={indoor}
-        isShowCompass={compass}
-        isShowIndoorLevelPicker={indoorLevelPicker}
-        isShowScaleBar={scaleBar}
-        isShowZoomControls={zoomControls}
-        isShowLocationButton={myLocation}
-        lightness={lightness}
-        clusters={clusters}
-        onInitialized={() => console.log('initialized!')}
-        onTapClusterLeaf={({markerIdentifier}) => {
-          console.log('onTapClusterLeaf', markerIdentifier);
-        }}
-        onTapMap={(args) => console.log(`Map Tapped: ${formatJson(args)}`)}
-        >
-        {restaurants.map((restaurant, index) => (
-          <NaverMapMarkerOverlay
-            key={restaurant.id}
-            latitude={parseFloat(restaurant.y)}
-            longitude={parseFloat(restaurant.x)}
-            onTap={() => console.log(`Tapped on: ${restaurant.name}`)}
-            anchor={{x: 0.5, y: 1}}
-            width={20}
-            height={20}>
-            <View style={{width: 50, height: 50, backgroundColor: 'red'}} />
-          </NaverMapMarkerOverlay>
-        ))}
-      </NaverMapView>
+      <BottomSheetModalProvider>
+        <NaverMapView
+          style={{flex: 1}}
+          ref={ref}
+          initialCamera={{
+            latitude: 37.271855,
+            longitude: 127.127626,
+            zoom: 15,
+          }}
+          locale="ko"
+          layerGroups={{
+            BUILDING: true,
+            BICYCLE: false,
+            CADASTRAL: false,
+            MOUNTAIN: false,
+            TRAFFIC: false,
+            TRANSIT: false,
+          }}
+          mapType={mapType}
+          initialRegion={Regions.KNU_Region}
+          camera={camera}
+          isIndoorEnabled={indoor}
+          isShowCompass={compass}
+          isShowIndoorLevelPicker={indoorLevelPicker}
+          isShowScaleBar={scaleBar}
+          isShowZoomControls={zoomControls}
+          isShowLocationButton={myLocation}
+          lightness={lightness}
+          clusters={clusters}
+          onInitialized={() => console.log('initialized!')}
+          onTapClusterLeaf={({markerIdentifier}) => {
+            console.log('onTapClusterLeaf', markerIdentifier);
+          }}
+          onTapMap={args => console.log(`Map Tapped: ${formatJson(args)}`)}>
+          {restaurants.map((restaurant, index) => (
+            <NaverMapMarkerOverlay
+              key={restaurant.id}
+              latitude={parseFloat(restaurant.y)}
+              longitude={parseFloat(restaurant.x)}
+              onTap={() => console.log(`Tapped on: ${restaurant.name}`)}
+              anchor={{x: 0.5, y: 1}}
+              width={20}
+              height={20}>
+              <View style={{width: 50, height: 50, backgroundColor: 'red'}} />
+            </NaverMapMarkerOverlay>
+          ))}
+        </NaverMapView>
+
+        <BottomSheetModal
+          ref={bottomSheetModalRef}
+          index={1}
+          snapPoints={snapPoints}
+          backdropComponent={handleSheetBackdrop}
+          enablePanDownToClose={false}>
+          <BottomSheetScrollView>
+            {restaurants.map((restaurant, index) => (
+              <BottomSheetScrollViewRenderItem data={restaurant} index={index} />
+            ))}
+          </BottomSheetScrollView>
+        </BottomSheetModal>
+      </BottomSheetModalProvider>
     </View>
   );
 };

@@ -11,6 +11,7 @@ import {
 } from '@mj-studio/react-native-naver-map';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
+import BottomSheetScrollViewHeader from '../components/BottomSheetScrollViewHeader';
 import BottomSheetScrollViewRenderItem from '../components/BottomSheetScrollViewRenderItem';
 import { getRestaurants } from '../utils/API/LocationAPI';
 import { Restaurant } from '../utils/data/type';
@@ -110,6 +111,7 @@ const LocationMapScreen = () => {
 
   useEffect(() => {
     getRestaurants(setRestaurants);
+    bottomSheetModalRef.current?.present(); // 스크린 로드 시 바텀 시트 표시
   }, []);
 
   // View
@@ -153,7 +155,7 @@ const LocationMapScreen = () => {
             console.log('onTapClusterLeaf', markerIdentifier);
           }}
           onTapMap={args => console.log(`Map Tapped: ${formatJson(args)}`)}>
-          {restaurants.map((restaurant, index) => (
+          {restaurants.map((restaurant, _) => (
             <NaverMapMarkerOverlay
               key={restaurant.id}
               latitude={parseFloat(restaurant.y)}
@@ -174,8 +176,12 @@ const LocationMapScreen = () => {
           backdropComponent={handleSheetBackdrop}
           enablePanDownToClose={false}>
           <BottomSheetScrollView>
-            {restaurants.map((restaurant, index) => (
-              <BottomSheetScrollViewRenderItem data={restaurant} index={index} />
+            <BottomSheetScrollViewHeader />
+            {restaurants.map((data, index) => (
+              <BottomSheetScrollViewRenderItem
+                data={data}
+                index={index}
+              />
             ))}
           </BottomSheetScrollView>
         </BottomSheetModal>

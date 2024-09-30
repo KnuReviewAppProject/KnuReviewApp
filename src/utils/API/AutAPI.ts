@@ -294,61 +294,77 @@ export const EditProfile = (
 export const EditProfileImage = (
   uid: string,
   email: string,
-  fileName: string,
-  imageURL: string,
-  imageData: string,
   navigation: NativeStackNavigationProp<ROOT_NAVIGATION>,
+  imageData: string | null,
+  fileName?: string,
+  imageURL?: string,
 ) => {
   if (!uid || !email) {
     return Alert.alert('알림', '다시 로그인해주세요.');
   }
 
-  if (!fileName || !imageURL) {
-    return Alert.alert('알림', '이미지를 선택해주세요.');
-  }
+  // if (!fileName || !imageURL) {
+  //   return Alert.alert('알림', '이미지를 선택해주세요.');
+  // }
 
   try {
-    if (Platform.OS === 'android') {
-      storage()
-        .ref(fileName)
-        .putString(imageData)
-        .then(async () => {
-          const downloadURL = await storage().ref(fileName).getDownloadURL();
-          axios
-            .post(`${API_URL}/api/edit-profile-image`, {
-              uid: uid,
-              email: email,
-              imageURL: downloadURL,
-            })
-            .then(res => {
-              if(res.status === 200){
-                navigation.navigate("Login");
-              }
-            })
-            .catch(err => console.log(err));
+    if(imageData == null){
+      axios
+        .post(`${API_URL}/api/edit-profile-image`, {
+          uid: uid,
+          email: email,
+          imageURL: imageData,
         })
-        .catch(err => console.log('try 에러: ', err));
-    } else if (Platform.OS === 'ios') {
-      storage()
-        .ref(fileName)
-        .putFile(imageData)
-        .then(async () => {
-          const downloadURL = await storage().ref(fileName).getDownloadURL();
-          axios
-            .post(`${API_URL}/api/edit-profile-image`, {
-              uid: uid,
-              email: email,
-              imageURL: downloadURL,
-            })
-            .then(res => {
-              if(res.status === 200){
-                navigation.navigate("Login");
-              }
-            })
-            .catch(err => console.log(err));
+        .then(res => {
+          if (res.status === 200) {
+            navigation.navigate('Login');
+          }
         })
-        .catch(err => console.log('try 에러: ', err));
+        .catch(err => console.log(err));
+    }else{
+      if (Platform.OS === 'android') {
+        storage()
+          .ref(fileName)
+          .putString(imageData)
+          .then(async () => {
+            const downloadURL = await storage().ref(fileName).getDownloadURL();
+            axios
+              .post(`${API_URL}/api/edit-profile-image`, {
+                uid: uid,
+                email: email,
+                imageURL: downloadURL,
+              })
+              .then(res => {
+                if(res.status === 200){
+                  navigation.navigate("Login");
+                }
+              })
+              .catch(err => console.log(err));
+          })
+          .catch(err => console.log('try 에러: ', err));
+      } else if (Platform.OS === 'ios') {
+        storage()
+          .ref(fileName)
+          .putFile(imageData)
+          .then(async () => {
+            const downloadURL = await storage().ref(fileName).getDownloadURL();
+            axios
+              .post(`${API_URL}/api/edit-profile-image`, {
+                uid: uid,
+                email: email,
+                imageURL: downloadURL,
+              })
+              .then(res => {
+                if(res.status === 200){
+                  navigation.navigate("Login");
+                }
+              })
+              .catch(err => console.log(err));
+          })
+          .catch(err => console.log('try 에러: ', err));
+      }
     }
+
   } catch (error) {
     console.log('error 에러: ', error);
   }

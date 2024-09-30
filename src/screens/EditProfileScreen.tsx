@@ -42,7 +42,7 @@ const EditProfileScreen = () => {
 
   const selectDefaultProfile = useCallback(() => {
     setProfileImage(null);
-    // EditProfileImage(user.uid, user.email);
+    EditProfileImage(user.uid, user.email, navigation, null);
   }, []);
 
   const selectImageFromGallery = useCallback(async () => {
@@ -73,10 +73,10 @@ const EditProfileScreen = () => {
             EditProfileImage(
               user.uid,
               user.email,
+              navigation,
+              android_base64,
               fileName,
               imageURL,
-              android_base64,
-              navigation
             );
             }
           }
@@ -88,10 +88,10 @@ const EditProfileScreen = () => {
               EditProfileImage(
                 user.uid,
                 user.email,
+                navigation,
+                ios_uri,
                 fileName,
                 imageURL,
-                ios_uri,
-                navigation
               );
             }
         }

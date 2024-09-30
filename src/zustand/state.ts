@@ -18,4 +18,5 @@ export interface UidStoreState {
 export interface UserStoreState {
   user: User;
   setUser: (user: User) => void;
+  setUpdatePhotoURL: (photoURL: string | null) => void;
 }

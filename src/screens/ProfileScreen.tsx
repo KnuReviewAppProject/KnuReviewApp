@@ -1,5 +1,5 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   Pressable,
@@ -14,6 +14,15 @@ const ProfileScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<ROOT_NAVIGATION>>();
   const user = useUserStore(state => state.user);
+
+  const [profileImage, setProfileImage] = useState<string | null>(
+    user.photoURL,
+  );
+
+  useEffect(() => {
+    console.log(user.photoURL);
+    setProfileImage(user.photoURL);
+  }, [user.photoURL]);
 
   // View
   return (
@@ -42,9 +51,9 @@ const ProfileScreen = () => {
               marginRight: 20,
             }}
             source={
-              user.photoURL === null
-                ? require('../assets/user.png')
-                : {uri: user.photoURL}
+              profileImage === null
+                ? require('../assets/user.png') // 기본 로컬 이미지
+                : {uri: profileImage} // 선택된 이미지 또는 서버에서 받은 이미지
             }
             resizeMode="center"
           />

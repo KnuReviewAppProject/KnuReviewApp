@@ -296,6 +296,7 @@ export const EditProfileImage = (
   email: string,
   navigation: NativeStackNavigationProp<ROOT_NAVIGATION>,
   imageData: string | null,
+  setUserProfileImageStore: (image: string | null) => void,
   fileName?: string,
   imageURL?: string,
 ) => {
@@ -317,7 +318,8 @@ export const EditProfileImage = (
         })
         .then(res => {
           if (res.status === 200) {
-            navigation.navigate('Login');
+            setUserProfileImageStore(imageData);
+            navigation.goBack();
           }
         })
         .catch(err => console.log(err));
@@ -328,6 +330,7 @@ export const EditProfileImage = (
           .putString(imageData)
           .then(async () => {
             const downloadURL = await storage().ref(fileName).getDownloadURL();
+            setUserProfileImageStore(downloadURL);
             axios
               .post(`${API_URL}/api/edit-profile-image`, {
                 uid: uid,
@@ -336,7 +339,8 @@ export const EditProfileImage = (
               })
               .then(res => {
                 if(res.status === 200){
-                  navigation.navigate("Login");
+                  console.log(res.data)
+                  navigation.goBack();
                 }
               })
               .catch(err => console.log(err));
@@ -348,6 +352,7 @@ export const EditProfileImage = (
           .putFile(imageData)
           .then(async () => {
             const downloadURL = await storage().ref(fileName).getDownloadURL();
+            setUserProfileImageStore(downloadURL);
             axios
               .post(`${API_URL}/api/edit-profile-image`, {
                 uid: uid,
@@ -356,7 +361,8 @@ export const EditProfileImage = (
               })
               .then(res => {
                 if(res.status === 200){
-                  navigation.navigate("Login");
+                  console.log(res.data)
+                  navigation.goBack();
                 }
               })
               .catch(err => console.log(err));

@@ -37,12 +37,19 @@ const EditProfileScreen = () => {
   const isNickNameValid = isValidNickName(nickname);
   const isPassWordValid = pwd1 === pwd2 ? isValidPassword(pwd2) : false;
 
-
-  const setUserStore = useUserStore(state => state.setUser)
+  const setUserProfileImageStore = useUserStore(
+    state => state.setUpdatePhotoURL,
+  );
 
   const selectDefaultProfile = useCallback(() => {
     setProfileImage(null);
-    EditProfileImage(user.uid, user.email, navigation, null);
+    EditProfileImage(
+      user.uid,
+      user.email,
+      navigation,
+      null,
+      setUserProfileImageStore,
+    );
   }, []);
 
   const selectImageFromGallery = useCallback(async () => {
@@ -61,39 +68,42 @@ const EditProfileScreen = () => {
     if (response.assets && response.assets.length > 0) {
       const assets = response.assets[0];
       const uri = assets.uri;
-      if(uri){
+      if (uri) {
         const fileNameArray = uri?.split('/');
         const fileName = fileNameArray[fileNameArray?.length - 1];
         const imageURL =
           Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
-          // 안드로이드
-          if (Platform.OS === 'android') {
-            if (assets.base64) {
-              const android_base64 = assets.base64;
+        setProfileImage(imageURL);
+        // 안드로이드
+        if (Platform.OS === 'android') {
+          if (assets.base64) {
+            const android_base64 = assets.base64;
             EditProfileImage(
               user.uid,
               user.email,
               navigation,
               android_base64,
+              setUserProfileImageStore,
               fileName,
               imageURL,
             );
-            }
           }
-  
-          // iOS
-          else if (Platform.OS === 'ios') {
-            if(assets.uri){
-              const ios_uri = assets.uri;
-              EditProfileImage(
-                user.uid,
-                user.email,
-                navigation,
-                ios_uri,
-                fileName,
-                imageURL,
-              );
-            }
+        }
+
+        // iOS
+        else if (Platform.OS === 'ios') {
+          if (assets.uri) {
+            const ios_uri = assets.uri;
+            EditProfileImage(
+              user.uid,
+              user.email,
+              navigation,
+              ios_uri,
+              setUserProfileImageStore,
+              fileName,
+              imageURL,
+            );
+          }
         }
       }
     }
@@ -129,6 +139,10 @@ const EditProfileScreen = () => {
       ),
     });
   });
+
+  useEffect(() => {
+    setUserProfileImageStore(user.photoURL);
+  }, [user.photoURL]);
 
   // View
   return (

@@ -26,4 +26,10 @@ export const useUserStore = create<UserStoreState>(set => ({
     photoURL: '',
   },
   setUser: (user: User) => set({user}),
+  setUpdatePhotoURL: (photoURL: string | null) => set(state => ({
+    user: {
+      ...state.user,
+      photoURL: photoURL,
+    },
+  })),
 }))

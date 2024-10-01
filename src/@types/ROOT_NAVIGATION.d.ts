@@ -1,3 +1,5 @@
+import { Restaurant } from "../utils/data/type";
+
 declare type ROOT_NAVIGATION = {
   Login: undefined;
   AuthEmail: undefined;
@@ -5,6 +7,9 @@ declare type ROOT_NAVIGATION = {
   Register: undefined;
   SignupFinish: undefined;
   EditProfile: undefined;
+  DetailLocation: {
+    data: Restaurant;
+  };
   Tabs: undefined;
   LocationMapTabs: undefined;
   ProfileTabs: undefined;

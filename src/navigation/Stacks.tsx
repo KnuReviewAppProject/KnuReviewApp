@@ -1,7 +1,9 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
+import { ROOT_NAVIGATION } from '../@types/ROOT_NAVIGATION';
 import AuthCodeScreen from '../screens/AuthCodeScreen';
 import AuthEmailScreen from '../screens/AuthEmailScreen';
+import DetailLocationScreen from '../screens/DetailLocationScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
@@ -31,10 +33,9 @@ const Stacks = () => {
         options={{headerShown: false}}
       />
 
-      <Stack.Screen
-        name="EditProfile"
-        component={EditProfileScreen}
-      />
+      <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+
+      <Stack.Screen name="DetailLocation" component={DetailLocationScreen} />
 
       <Stack.Screen
         name="Tabs"

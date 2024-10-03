@@ -16,6 +16,7 @@ import {
   launchImageLibrary,
 } from 'react-native-image-picker';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
+import { ROOT_NAVIGATION } from '../@types/ROOT_NAVIGATION';
 import { EditProfile, EditProfileImage } from '../utils/API/AutAPI';
 import { isValidNickName, isValidPassword } from '../utils/RegularExpression';
 import { useUserStore } from '../zustand/store';

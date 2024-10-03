@@ -7,7 +7,7 @@ import { StarRatingDisplay } from 'react-native-star-rating-widget';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { ROOT_NAVIGATION } from '../@types/ROOT_NAVIGATION';
 
-const DetailLocationScreen: React.FC = () => {
+const DetailLocationScreen = () => {
   // Logic
   const navigation =
     useNavigation<NativeStackNavigationProp<ROOT_NAVIGATION>>();
@@ -139,12 +139,14 @@ const DetailLocationScreen: React.FC = () => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Image
-            source={require('../assets/unclicked_star.png')}
-            style={{width: 24, height: 24, marginBottom: 10}}
-            resizeMode="contain"
-          />
-          <Text>저장</Text>
+          <TouchableOpacity>
+            <Image
+              source={require('../assets/unclicked_star.png')}
+              style={{width: 24, height: 24, marginBottom: 10}}
+              resizeMode="contain"
+            />
+            <Text>저장</Text>
+          </TouchableOpacity>
         </View>
 
         <View
@@ -162,12 +164,17 @@ const DetailLocationScreen: React.FC = () => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Image
-            source={require('../assets/edit.png')}
-            style={{width: 24, height: 24, marginBottom: 10}}
-            resizeMode="contain"
-          />
-          <Text>작성</Text>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('ReviewCreate', {name: data.name, imageURL: data.imageUrl})
+            }>
+            <Image
+              source={require('../assets/edit.png')}
+              style={{width: 24, height: 24, marginBottom: 10}}
+              resizeMode="contain"
+            />
+            <Text>작성</Text>
+          </TouchableOpacity>
         </View>
       </View>
 

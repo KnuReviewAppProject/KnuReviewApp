@@ -10,6 +10,10 @@ declare type ROOT_NAVIGATION = {
   DetailLocation: {
     data: Restaurant;
   };
+  ReviewCreate: {
+    name: string;
+    imageURL: string;
+  };
   Tabs: undefined;
   LocationMapTabs: undefined;
   ProfileTabs: undefined;

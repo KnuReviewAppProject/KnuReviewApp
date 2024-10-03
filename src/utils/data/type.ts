@@ -22,3 +22,9 @@ export type User = {
   nickname: string,
   photoURL: string | null,
 }
+
+// 리뷰 이미지 타입 정의
+export type ReviewImage = {
+  uri: string; // 이미지의 URI
+  id: string;  // 고유한 ID (파일명 또는 임의 생성된 ID)
+};

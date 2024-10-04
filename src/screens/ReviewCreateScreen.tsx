@@ -16,25 +16,30 @@ import StarRating from 'react-native-star-rating-widget';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { ROOT_NAVIGATION } from '../@types/ROOT_NAVIGATION';
 import ReviewImageRenderItem from '../components/ReviewImageRenderItem';
+import { addReview } from '../utils/API/LocationAPI';
 import { ReviewImage } from '../utils/data/type';
 import { getDataWithEmptyView, removeImage } from '../utils/ReviewImage';
+import { useUserStore } from '../zustand/store';
 
 const ReviewCreateScreen = () => {
   // Logic
   const navigation =
     useNavigation<NativeStackNavigationProp<ROOT_NAVIGATION>>();
+    
   const route = useRoute<RouteProp<ROOT_NAVIGATION, 'ReviewCreate'>>();
-  const {name, imageURL} = route.params;
+  const {name, category, address, location, imageURL} = route.params;
 
   const [rating, setRating] = useState<number>(0);
   const [content, setContent] = useState<string>('');
   const [images, setImages] = useState<ReviewImage[]>([]);
-  const [selectedButton, setSelectedButton] = useState<string | null>(null);
+  const [recommend, setRecommend] = useState<string | null>(null);
 
   const dataWithEmptyView = getDataWithEmptyView(images, 3);
 
-  const handleSelectGoodorBad = (button: string) => {
-    setSelectedButton(button); // 눌린 버튼의 상태 업데이트
+  const user = useUserStore(state => state.user);
+
+  const handleSelectGoodorBad = (state: string) => {
+    setRecommend(state); // 눌린 버튼의 상태 업데이트
   };
 
   useEffect(() => {
@@ -58,7 +63,21 @@ const ReviewCreateScreen = () => {
             borderRadius: 10,
             paddingHorizontal: 10,
             paddingVertical: 5,
-          }}>
+          }}
+          onPress={() =>
+            addReview(
+              user.email,
+              name,
+              category,
+              address,
+              location,
+              rating,
+              content,
+              images,
+              recommend,
+              navigation
+            )
+          }>
           <Text style={{fontSize: 15, color: 'white'}}>등록하기</Text>
         </Pressable>
       ),
@@ -184,14 +203,14 @@ const ReviewCreateScreen = () => {
                 borderColor: '#F4F4F4',
                 borderRadius: 48 / 2, // 원형을 유지하기 위해 반지름 설정
                 backgroundColor:
-                  selectedButton === 'good' ? '#F4F4F4' : 'transparent', // 버튼이 눌렸을 때 배경색 변경
+                  recommend === 'good' ? '#F4F4F4' : 'transparent', // 버튼이 눌렸을 때 배경색 변경
               }}>
               <Image
                 source={require('../assets/good.png')}
                 style={{
                   width: 24,
                   height: 24,
-                  tintColor: selectedButton === 'good' ? 'black' : '#F4F4F4',
+                  tintColor: recommend === 'good' ? 'black' : '#F4F4F4',
                 }}
                 resizeMode="contain"
               />
@@ -208,14 +227,14 @@ const ReviewCreateScreen = () => {
                 borderColor: '#F4F4F4',
                 borderRadius: 48 / 2, // 원형을 유지하기 위해 반지름 설정
                 backgroundColor:
-                  selectedButton === 'bad' ? '#F4F4F4' : 'transparent', // 버튼이 눌렸을 때 배경색 변경
+                  recommend === 'bad' ? '#F4F4F4' : 'transparent', // 버튼이 눌렸을 때 배경색 변경
               }}>
               <Image
                 source={require('../assets/bad.png')}
                 style={{
                   width: 24,
                   height: 24,
-                  tintColor: selectedButton === 'bad' ? 'black' : '#F4F4F4',
+                  tintColor: recommend === 'bad' ? 'black' : '#F4F4F4',
                 }}
                 resizeMode="contain"
               />

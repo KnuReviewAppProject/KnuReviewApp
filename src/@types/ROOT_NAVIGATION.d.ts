@@ -12,6 +12,9 @@ declare type ROOT_NAVIGATION = {
   };
   ReviewCreate: {
     name: string;
+    category: string;
+    address: string;
+    location: object;
     imageURL: string;
   };
   Tabs: undefined;

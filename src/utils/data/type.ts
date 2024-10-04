@@ -28,3 +28,17 @@ export type ReviewImage = {
   uri: string; // 이미지의 URI
   id: string;  // 고유한 ID (파일명 또는 임의 생성된 ID)
 };
+
+// 리뷰 데이터 타입 정의
+export type Review = {
+  email: string;
+  name: string;
+  category: string;
+  addressName: string;
+  location: object; // location은 좌표 정보 등을 담을 수 있으므로 object로 처리
+  rating: number;
+  content: string;
+  images: ReviewImage[]; // ReviewImage 배열 타입
+  recommend: string | null;
+  createdAt?: string; // 서버에서 생성된 시간 정보
+}

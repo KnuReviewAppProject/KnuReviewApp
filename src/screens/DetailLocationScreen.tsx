@@ -2,10 +2,13 @@ import { HeaderBackButton } from '@react-navigation/elements';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
-import { Image, Linking, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, Linking, Text, TouchableOpacity, View } from 'react-native';
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { ROOT_NAVIGATION } from '../@types/ROOT_NAVIGATION';
+import ReviewsRenderItem from '../components/ReviewsRenderItem';
+import { getReview } from '../utils/API/LocationAPI';
+import { Review } from '../utils/data/type';
 
 const DetailLocationScreen = () => {
   // Logic
@@ -14,7 +17,10 @@ const DetailLocationScreen = () => {
   const route = useRoute<RouteProp<ROOT_NAVIGATION, 'DetailLocation'>>();
   const {data} = route.params;
 
-  const [rating, setRating] = useState<number>(3);
+  const [reviews, setReviews] = useState<Review[]>([]);
+
+  const rating = reviews.length / 5;
+  const filteredReviews = reviews.filter(review => review.name === data.name);
 
   useEffect(() => {
     navigation.setOptions({
@@ -31,6 +37,11 @@ const DetailLocationScreen = () => {
       },
     });
   });
+
+
+  useEffect(() => {
+    getReview(setReviews);
+  }, [])
 
   // View
   return (
@@ -166,7 +177,16 @@ const DetailLocationScreen = () => {
           }}>
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate('ReviewCreate', {name: data.name, imageURL: data.imageUrl})
+              navigation.navigate('ReviewCreate', {
+                name: data.name,
+                category: data.category,
+                address: data.address,
+                location: {
+                  x: data.y,
+                  y: data.x,
+                },
+                imageURL: data.imageUrl,
+              })
             }>
             <Image
               source={require('../assets/edit.png')}
@@ -182,9 +202,16 @@ const DetailLocationScreen = () => {
         style={{
           width: '100%',
           marginVertical: 20,
+          marginBottom: 30,
           borderWidth: 3,
           borderColor: '#D9D9D9',
         }}
+      />
+
+      <FlatList
+        data={filteredReviews}
+        renderItem={({item}) => <ReviewsRenderItem data={item} />}
+        keyExtractor={(_, index) => index.toString()}
       />
     </View>
   );

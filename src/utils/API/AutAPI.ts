@@ -4,6 +4,7 @@ import storage from '@react-native-firebase/storage';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import axios from 'axios';
 import { Alert, Platform } from 'react-native';
+import { ROOT_NAVIGATION } from '../../@types/ROOT_NAVIGATION';
 import { User } from '../data/type';
 
 const API_URL = Platform.OS === 'ios' ? IOS_API_URL : ANDROID_API_URL;
@@ -291,6 +292,7 @@ export const EditProfile = (
   }
 };
 
+// 프로필 이미지 수정 api
 export const EditProfileImage = (
   uid: string,
   email: string,

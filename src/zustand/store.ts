@@ -1,6 +1,12 @@
 import { create } from 'zustand';
-import { User } from '../utils/data/type';
-import { AuthTokenStoreState, EmailStoreState, UidStoreState, UserStoreState } from './state';
+import { Review, User } from '../utils/data/type';
+import {
+  AuthTokenStoreState,
+  EmailStoreState,
+  ReviewStoreState,
+  UidStoreState,
+  UserStoreState,
+} from './state';
 
 export const useEmailStore = create<EmailStoreState>(set => ({
   email: '',
@@ -32,4 +38,9 @@ export const useUserStore = create<UserStoreState>(set => ({
       photoURL: photoURL,
     },
   })),
+}))
+
+export const useReviewStore = create<ReviewStoreState>(set => ({
+  reviews: [],
+  setReviews: (reviews: Review[]) => set({reviews}),
 }))

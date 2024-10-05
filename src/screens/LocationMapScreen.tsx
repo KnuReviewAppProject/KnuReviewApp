@@ -111,7 +111,6 @@ const LocationMapScreen = () => {
 
   useEffect(() => {
     getRestaurants(setRestaurants);
-    console.log(restaurants);
     bottomSheetModalRef.current?.present(); // 스크린 로드 시 바텀 시트 표시
   }, []);
 

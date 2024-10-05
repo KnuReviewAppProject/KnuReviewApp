@@ -1,4 +1,4 @@
-import { User } from "../utils/data/type";
+import { Review, User } from "../utils/data/type";
 
 export interface EmailStoreState {
   email: string;
@@ -19,4 +19,9 @@ export interface UserStoreState {
   user: User;
   setUser: (user: User) => void;
   setUpdatePhotoURL: (photoURL: string | null) => void;
+}
+
+export interface ReviewStoreState {
+  reviews: Review[];
+  setReviews: (reviews: Review[]) => void;
 }

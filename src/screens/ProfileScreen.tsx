@@ -7,6 +7,7 @@ import {
   View
 } from 'react-native';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
+import { ROOT_NAVIGATION } from '../@types/ROOT_NAVIGATION';
 import { Logout, Unsubscribe } from '../utils/API/AutAPI';
 import { useUserStore } from '../zustand/store';
 const ProfileScreen = () => {

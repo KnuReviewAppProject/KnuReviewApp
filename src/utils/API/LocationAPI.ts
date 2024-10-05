@@ -1,4 +1,5 @@
 import { ANDROID_API_URL, IOS_API_URL } from '@env';
+
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import axios from 'axios';
 import { Platform } from 'react-native';
@@ -16,7 +17,7 @@ export const getRestaurants = (
       axios
         .get(`${API_URL}/api/getRestaurants`)
         .then(res => {
-          // console.log(res.data);
+          console.log(res.data);
           setRestaurants(res.data.results);
         })
         .catch(err => console.log(err));
@@ -64,12 +65,13 @@ export const addReview = (
 };
 
 // 리뷰 읽기 api 함수
-export const getReview = (setReviews: (data: Review[]) => void) => {
+export const getReview = (setReviewStore: (data: Review[]) => void) => {
   try {
     axios
       .get(`${API_URL}/api/get-reviews`)
       .then(res => {
-        setReviews(res.data);
+        // 이제 사용자 정보가 포함된 리뷰 데이터를 출력
+        setReviewStore(res.data); // 사용자 정보가 포함된 리뷰 데이터를 상태로 설정
       })
       .catch(err => console.log(`try 에러: ${err}`));
   } catch (error) {

@@ -31,6 +31,8 @@ export type ReviewImage = {
 
 // 리뷰 데이터 타입 정의
 export type Review = {
+  nickname: string;
+  photoURL: string;
   email: string;
   name: string;
   category: string;
@@ -40,5 +42,8 @@ export type Review = {
   content: string;
   images: ReviewImage[]; // ReviewImage 배열 타입
   recommend: string | null;
-  createdAt?: string; // 서버에서 생성된 시간 정보
-}
+  createdAt: {
+    _seconds: number;
+    _nanoseconds: number;
+  }; // 서버에서 생성된 시간 정보
+};

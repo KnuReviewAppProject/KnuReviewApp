@@ -1,14 +1,14 @@
 import { HeaderBackButton } from '@react-navigation/elements';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { FlatList, Image, Linking, Text, TouchableOpacity, View } from 'react-native';
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { ROOT_NAVIGATION } from '../@types/ROOT_NAVIGATION';
 import ReviewsRenderItem from '../components/ReviewsRenderItem';
 import { getReview } from '../utils/API/LocationAPI';
-import { Review } from '../utils/data/type';
+import { useReviewStore } from '../zustand/store';
 
 const DetailLocationScreen = () => {
   // Logic
@@ -17,7 +17,10 @@ const DetailLocationScreen = () => {
   const route = useRoute<RouteProp<ROOT_NAVIGATION, 'DetailLocation'>>();
   const {data} = route.params;
 
-  const [reviews, setReviews] = useState<Review[]>([]);
+  // const [reviews, setReviews] = useState<Review[]>([]);
+
+  const reviews = useReviewStore((state) => state.reviews);
+  const setReviewStore = useReviewStore((state) => state.setReviews);
 
   const rating = reviews.length / 5;
   const filteredReviews = reviews.filter(review => review.name === data.name);
@@ -40,7 +43,7 @@ const DetailLocationScreen = () => {
 
 
   useEffect(() => {
-    getReview(setReviews);
+    getReview(setReviewStore);
   }, [])
 
   // View
@@ -209,6 +212,7 @@ const DetailLocationScreen = () => {
       />
 
       <FlatList
+        style={{paddingHorizontal: 30}}
         data={filteredReviews}
         renderItem={({item}) => <ReviewsRenderItem data={item} />}
         keyExtractor={(_, index) => index.toString()}

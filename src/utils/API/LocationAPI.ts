@@ -2,9 +2,10 @@ import { ANDROID_API_URL, IOS_API_URL } from '@env';
 
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import axios from 'axios';
-import { Platform } from 'react-native';
+import { Alert, Platform } from 'react-native';
 import { ROOT_NAVIGATION } from '../../@types/ROOT_NAVIGATION';
 import { Restaurant, Review, ReviewImage } from '../data/type';
+import { Logout } from './AutAPI';
 
 const API_URL = Platform.OS === 'ios' ? IOS_API_URL : ANDROID_API_URL;
 
@@ -40,6 +41,11 @@ export const addReview = (
   recommend: string | null,
   navigation: NativeStackNavigationProp<ROOT_NAVIGATION>,
 ) => {
+  if(!email){
+    Alert.alert('알림', '다시 로그인 해주세요.');
+    Logout(navigation);
+  }
+
   try {
     axios
       .post(`${API_URL}/api/create-review`, {

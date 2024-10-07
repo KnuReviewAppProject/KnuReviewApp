@@ -12,6 +12,7 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
+import { ROOT_NAVIGATION } from '../@types/ROOT_NAVIGATION';
 import { Login } from '../utils/API/AutAPI';
 import { useUserStore } from '../zustand/store';
 
@@ -28,8 +29,6 @@ const LoginScreen = () => {
     useNavigation<NativeStackNavigationProp<ROOT_NAVIGATION>>();
 
   const setUserStore = useUserStore(state => state.setUser);
-  // const setUidStore = useUidStore(state => state.setUid);
-  // const setEmailStore = useEmailStore(state => state.setEmail);
 
   const handleEmailSubmit = () => {
     if (inputRef.current) {

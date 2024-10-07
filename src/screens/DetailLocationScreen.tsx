@@ -1,8 +1,17 @@
 import { HeaderBackButton } from '@react-navigation/elements';
-import { RouteProp, useRoute } from '@react-navigation/native';
+import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { useEffect } from 'react';
-import { FlatList, Image, Linking, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  FlatList,
+  Image,
+  Linking,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { ROOT_NAVIGATION } from '../@types/ROOT_NAVIGATION';
@@ -17,13 +26,58 @@ const DetailLocationScreen = () => {
   const route = useRoute<RouteProp<ROOT_NAVIGATION, 'DetailLocation'>>();
   const {data} = route.params;
 
-  // const [reviews, setReviews] = useState<Review[]>([]);
+  const [isOnlyPic, setIsOnlyPic] = useState<boolean>(false);
 
-  const reviews = useReviewStore((state) => state.reviews);
-  const setReviewStore = useReviewStore((state) => state.setReviews);
+  const reviews = useReviewStore(state => state.reviews);
+  const setReviewStore = useReviewStore(state => state.setReviews);
 
-  const rating = reviews.length / 5;
   const filteredReviews = reviews.filter(review => review.name === data.name);
+
+  const sortedReviews = filteredReviews.sort((a, b) => {
+    const aDate =
+      a.createdAt && typeof a.createdAt._seconds === 'number'
+        ? new Date(
+            a.createdAt._seconds * 1000 + a.createdAt._nanoseconds / 1000000,
+          )
+        : new Date(0); // createdAt이 없을 경우 가장 오래된 날짜로 처리
+
+    const bDate =
+      b.createdAt && typeof b.createdAt._seconds === 'number'
+        ? new Date(
+            b.createdAt._seconds * 1000 + b.createdAt._nanoseconds / 1000000,
+          )
+        : new Date(0); // createdAt이 없을 경우 가장 오래된 날짜로 처리
+
+    return bDate.getTime() - aDate.getTime(); // getTime()으로 밀리초 반환
+  });
+
+  // Checkbox 값에 따라 reviews 필터링
+  const displayedReviews = isOnlyPic
+    ? sortedReviews.filter(review => review.images && review.images.length > 0)
+    : sortedReviews;
+
+  const totalReviews = filteredReviews.length;
+  const totalRating = filteredReviews.reduce(
+    (acc, review) => acc + review.rating,
+    0,
+  );
+  const rating =
+    totalReviews > 0 ? Number((totalRating / totalReviews).toFixed(1)) : 0; // 소수점 첫째자리
+
+    // 각 유저의 리뷰 수와 추천/비추천 수 계산
+  const userReviewStats = filteredReviews.reduce((acc, review) => {
+    const { nickname, recommend } = review;
+    if (!acc[nickname]) {
+      acc[nickname] = { reviews: 0, good: 0, bad: 0 };
+    }
+    acc[nickname].reviews += 1; // 리뷰 수 증가
+    if (recommend === 'good') {
+      acc[nickname].good += 1; // 추천 수 증가
+    } else if (recommend === 'bad') {
+      acc[nickname].bad += 1; // 비추천 수 증가
+    }
+    return acc;
+  }, {} as Record<string, { reviews: number; good: number; bad: number }>);
 
   useEffect(() => {
     navigation.setOptions({
@@ -41,14 +95,16 @@ const DetailLocationScreen = () => {
     });
   });
 
-
-  useEffect(() => {
-    getReview(setReviewStore);
-  }, [])
+  // useFocusEffect로 스크린이 다시 활성화될 때마다 최신 리뷰를 가져옴
+  useFocusEffect(
+    React.useCallback(() => {
+      getReview(setReviewStore); // 서버에서 리뷰 데이터 새로 가져오기
+    }, []),
+  );
 
   // View
   return (
-    <View
+    <ScrollView
       style={{
         flex: 1,
         backgroundColor: 'white',
@@ -120,6 +176,7 @@ const DetailLocationScreen = () => {
           flexDirection: 'row',
           justifyContent: 'center',
           alignItems: 'center',
+          marginBottom: 30,
         }}>
         <View
           style={{
@@ -204,20 +261,44 @@ const DetailLocationScreen = () => {
       <View
         style={{
           width: '100%',
-          marginVertical: 20,
-          marginBottom: 30,
           borderWidth: 3,
           borderColor: '#D9D9D9',
+          marginBottom: 20,
         }}
       />
 
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingHorizontal: 30,
+        }}>
+        <BouncyCheckbox
+          size={20}
+          unFillColor="white"
+          fillColor="#287BF3"
+          iconStyle={{borderRadius: 3, marginRight: 5}}
+          innerIconStyle={{borderRadius: 3}}
+          disableText
+          isChecked={isOnlyPic}
+          onPress={() => setIsOnlyPic(!isOnlyPic)}
+        />
+        <Text>사진 리뷰만 보기 </Text>
+      </View>
+
       <FlatList
         style={{paddingHorizontal: 30}}
-        data={filteredReviews}
-        renderItem={({item}) => <ReviewsRenderItem data={item} />}
+        data={displayedReviews}
+        renderItem={({item}) => (
+          <ReviewsRenderItem
+            data={item}
+            userStats={userReviewStats[item.nickname]}
+          />
+        )}
         keyExtractor={(_, index) => index.toString()}
+        scrollEnabled={false}
       />
-    </View>
+    </ScrollView>
   );
 };
 

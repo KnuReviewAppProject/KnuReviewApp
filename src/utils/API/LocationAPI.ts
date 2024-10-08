@@ -84,3 +84,20 @@ export const getReview = (setReviewStore: (data: Review[]) => void) => {
     console.log(`catch 에러: ${error}`);
   }
 };
+
+// 내가 쓴 리뷰 읽기 api 함수
+export const getMyReviews = (
+  email: string,
+  setMyReviewStore: (data: Review[]) => void,
+) => {
+  try {
+    axios
+      .get(`${API_URL}/api/my-reviews`, {params: {email}})
+      .then(res => {
+        setMyReviewStore(res.data); // 가져온 리뷰 데이터를 상태로 설정
+      })
+      .catch(err => console.log(`Error getting user reviews: ${err}`));
+  } catch (error) {
+    console.log(`Error in API call: ${error}`);
+  }
+};

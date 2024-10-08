@@ -25,3 +25,8 @@ export interface ReviewStoreState {
   reviews: Review[];
   setReviews: (reviews: Review[]) => void;
 }
+
+export interface MyReviewStoreState {
+  myreviews: Review[];
+  setMyReviews: (reviews: Review[]) => void;
+}

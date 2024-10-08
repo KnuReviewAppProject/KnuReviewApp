@@ -2,17 +2,18 @@ import { HeaderBackButton } from '@react-navigation/elements';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useEffect, useRef, useState } from 'react';
 import {
-    ColorValue,
-    Image,
-    Platform,
-    Pressable,
-    Text,
-    TouchableOpacity,
-    View
+  ColorValue,
+  Image,
+  Platform,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import OTPTextView from 'react-native-otp-textinput';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
+import { ROOT_NAVIGATION } from '../@types/ROOT_NAVIGATION';
 import { AuthCode, AuthEmail } from '../utils/API/AutAPI';
 import { formatTime } from '../utils/common';
 import { isValidCode } from '../utils/RegularExpression';

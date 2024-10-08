@@ -17,6 +17,7 @@ declare type ROOT_NAVIGATION = {
     location: object;
     imageURL: string;
   };
+  MyReview: undefined;
   Tabs: undefined;
   LocationMapTabs: undefined;
   ProfileTabs: undefined;

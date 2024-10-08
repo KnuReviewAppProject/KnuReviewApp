@@ -3,6 +3,7 @@ import { Review, User } from '../utils/data/type';
 import {
   AuthTokenStoreState,
   EmailStoreState,
+  MyReviewStoreState,
   ReviewStoreState,
   UidStoreState,
   UserStoreState,
@@ -32,15 +33,21 @@ export const useUserStore = create<UserStoreState>(set => ({
     photoURL: '',
   },
   setUser: (user: User) => set({user}),
-  setUpdatePhotoURL: (photoURL: string | null) => set(state => ({
-    user: {
-      ...state.user,
-      photoURL: photoURL,
-    },
-  })),
-}))
+  setUpdatePhotoURL: (photoURL: string | null) =>
+    set(state => ({
+      user: {
+        ...state.user,
+        photoURL: photoURL,
+      },
+    })),
+}));
 
 export const useReviewStore = create<ReviewStoreState>(set => ({
   reviews: [],
   setReviews: (reviews: Review[]) => set({reviews}),
-}))
+}));
+
+export const useMyReviewStore = create<MyReviewStoreState>(set => ({
+  myreviews: [],
+  setMyReviews: (myreviews: Review[]) => set({myreviews}),
+}));

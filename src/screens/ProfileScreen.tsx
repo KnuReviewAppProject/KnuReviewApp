@@ -103,7 +103,7 @@ const ProfileScreen = () => {
           paddingHorizontal: 30,
           marginBottom: 17,
         }}
-        onPress={() => console.log('test')}>
+        onPress={() => navigation.navigate('MyReview')}>
         <Image
           source={require('../assets/hamburger.png')}
           style={{width: 24, height: 24, marginRight: 15}}

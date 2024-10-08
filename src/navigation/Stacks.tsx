@@ -6,6 +6,7 @@ import AuthEmailScreen from '../screens/AuthEmailScreen';
 import DetailLocationScreen from '../screens/DetailLocationScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
 import LoginScreen from '../screens/LoginScreen';
+import MyReviewScreen from '../screens/MyReviewScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import ReviewCreateScreen from '../screens/ReviewCreateScreen';
 import SignupFinishedScreen from '../screens/SignupFinishedScreen';
@@ -39,6 +40,8 @@ const Stacks = () => {
       <Stack.Screen name="DetailLocation" component={DetailLocationScreen} />
 
       <Stack.Screen name="ReviewCreate" component={ReviewCreateScreen} />
+
+      <Stack.Screen name="MyReview" component={MyReviewScreen} />
 
       <Stack.Screen
         name="Tabs"

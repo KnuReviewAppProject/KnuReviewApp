@@ -1,10 +1,17 @@
 import React from 'react';
-import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
+import {
+    FlatList,
+    Image,
+    Text,
+    TouchableOpacity,
+    View
+} from 'react-native';
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
+import { deleteReview } from '../utils/API/LocationAPI';
 import { getRelativeTime } from '../utils/common';
 import { Review } from '../utils/data/type';
+import { useUserStore } from '../zustand/store';
 import ReviewsImageRenderItem from './ReviewsImageRenderItem';
-
 interface MyReviewsRenderItemProps {
   data: Review;
   userReviewStats: {
@@ -19,12 +26,15 @@ const MyReviewsRenderItem: React.FC<MyReviewsRenderItemProps> = ({
   userReviewStats,
 }) => {
   // Logic
+  const user = useUserStore(state => state.user);
+
   const createdAt = data.createdAt
     ? new Date(
         data.createdAt._seconds * 1000 + data.createdAt._nanoseconds / 1000000,
       ) // Timestamp를 밀리초로 변환하여 Date 객체 생성
     : null;
 
+  // View
   return (
     <View
       style={{
@@ -164,7 +174,8 @@ const MyReviewsRenderItem: React.FC<MyReviewsRenderItemProps> = ({
             paddingVertical: 5,
             borderRadius: 15,
             backgroundColor: '#F4F4F4',
-          }}>
+          }}
+          onPress={() => deleteReview(user.uid)}>
           <Text>삭제</Text>
         </TouchableOpacity>
       </View>

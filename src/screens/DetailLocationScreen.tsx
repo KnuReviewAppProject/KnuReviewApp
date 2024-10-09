@@ -15,6 +15,7 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { ROOT_NAVIGATION } from '../@types/ROOT_NAVIGATION';
+import EmptyReviewMessage from '../components/EmptyReviewMessage';
 import ReviewsRenderItem from '../components/ReviewsRenderItem';
 import { getReview } from '../utils/API/LocationAPI';
 import { useReviewStore } from '../zustand/store';
@@ -267,37 +268,43 @@ const DetailLocationScreen = () => {
         }}
       />
 
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: 30,
-        }}>
-        <BouncyCheckbox
-          size={20}
-          unFillColor="white"
-          fillColor="#287BF3"
-          iconStyle={{borderRadius: 3, marginRight: 5}}
-          innerIconStyle={{borderRadius: 3}}
-          disableText
-          isChecked={isOnlyPic}
-          onPress={() => setIsOnlyPic(!isOnlyPic)}
-        />
-        <Text>사진 리뷰만 보기 </Text>
-      </View>
+      {displayedReviews.length === 0 ? (
+        <EmptyReviewMessage />
+      ) : (
+        <>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              paddingHorizontal: 30,
+            }}>
+            <BouncyCheckbox
+              size={20}
+              unFillColor="white"
+              fillColor="#287BF3"
+              iconStyle={{borderRadius: 3, marginRight: 5}}
+              innerIconStyle={{borderRadius: 3}}
+              disableText
+              isChecked={isOnlyPic}
+              onPress={() => setIsOnlyPic(!isOnlyPic)}
+            />
+            <Text>사진 리뷰만 보기 </Text>
+          </View>
 
-      <FlatList
-        style={{paddingHorizontal: 30}}
-        data={displayedReviews}
-        renderItem={({item}) => (
-          <ReviewsRenderItem
-            data={item}
-            userStats={userReviewStats[item.nickname]}
+          <FlatList
+            style={{paddingHorizontal: 30}}
+            data={displayedReviews}
+            renderItem={({item}) => (
+              <ReviewsRenderItem
+                data={item}
+                userStats={userReviewStats[item.nickname]}
+              />
+            )}
+            keyExtractor={(_, index) => index.toString()}
+            scrollEnabled={false}
           />
-        )}
-        keyExtractor={(_, index) => index.toString()}
-        scrollEnabled={false}
-      />
+        </>
+      )}
     </ScrollView>
   );
 };

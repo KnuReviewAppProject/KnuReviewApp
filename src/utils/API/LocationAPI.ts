@@ -31,6 +31,7 @@ export const getRestaurants = (
 // 리뷰 추가 api 함수
 export const addReview = (
   email: string,
+  uid: string,
   name: string,
   category: string,
   address: string,
@@ -41,7 +42,7 @@ export const addReview = (
   recommend: string | null,
   navigation: NativeStackNavigationProp<ROOT_NAVIGATION>,
 ) => {
-  if(!email){
+  if (!email || !uid) {
     Alert.alert('알림', '다시 로그인 해주세요.');
     Logout(navigation);
   }
@@ -50,6 +51,7 @@ export const addReview = (
     axios
       .post(`${API_URL}/api/create-review`, {
         email: email,
+        uid: uid,
         name: name,
         category: category,
         addressName: address,
@@ -77,6 +79,7 @@ export const getReview = (setReviewStore: (data: Review[]) => void) => {
       .get(`${API_URL}/api/get-reviews`)
       .then(res => {
         // 이제 사용자 정보가 포함된 리뷰 데이터를 출력
+        console.log(res.data);
         setReviewStore(res.data); // 사용자 정보가 포함된 리뷰 데이터를 상태로 설정
       })
       .catch(err => console.log(`try 에러: ${err}`));
@@ -92,12 +95,31 @@ export const getMyReviews = (
 ) => {
   try {
     axios
-      .get(`${API_URL}/api/my-reviews`, {params: {email}})
+      .get(`${API_URL}/api/get-myreviews`, {params: {email}})
       .then(res => {
         setMyReviewStore(res.data); // 가져온 리뷰 데이터를 상태로 설정
       })
       .catch(err => console.log(`Error getting user reviews: ${err}`));
   } catch (error) {
-    console.log(`Error in API call: ${error}`);
+    console.log(`catch 에러: ${error}`);
+  }
+};
+
+// 리뷰 삭제 api 함수
+export const deleteReview = (uid: string) => {
+  try {
+    axios
+      .delete(`${API_URL}/api/delete-review`, {
+        data: {
+          uid,
+        },
+      })
+      .then(res => {
+        console.log(res.status);
+        Alert.alert("리뷰 삭제", "리뷰가 삭제 됐습니다.")
+      })
+      .catch(err => console.log(`try 에러: ${err}`));
+  } catch (error) {
+    console.log(`catch 에러: ${error}`);
   }
 };

@@ -19,21 +19,18 @@ const MyReviewScreen = () => {
   const setMyReviewStore = useMyReviewStore(state => state.setMyReviews);
 
   // 각 유저의 리뷰 수, 추천, 비추천 수 계산
-  const userReviewStats = myReviews.reduce(
-    (acc, review) => {
-      if (!acc[review.nickname]) {
-        acc[review.nickname] = { reviews: 0, good: 0, bad: 0 };
-      }
-      acc[review.nickname].reviews += 1;
-      if (review.recommend === 'good') {
-        acc[review.nickname].good += 1;
-      } else if (review.recommend === 'bad') {
-        acc[review.nickname].bad += 1;
-      }
-      return acc;
-    },
-    {} as Record<string, { reviews: number; good: number; bad: number }>
-  );
+  const userReviewStats = myReviews.reduce((acc, review) => {
+    if (!acc[review.nickname]) {
+      acc[review.nickname] = {reviews: 0, good: 0, bad: 0};
+    }
+    acc[review.nickname].reviews += 1;
+    if (review.recommend === 'good') {
+      acc[review.nickname].good += 1;
+    } else if (review.recommend === 'bad') {
+      acc[review.nickname].bad += 1;
+    }
+    return acc;
+  }, {} as Record<string, {reviews: number; good: number; bad: number}>);
 
   useEffect(() => {
     navigation.setOptions({
@@ -54,6 +51,7 @@ const MyReviewScreen = () => {
   // useFocusEffect로 스크린이 다시 활성화될 때마다 최신 리뷰를 가져옴
   useFocusEffect(
     React.useCallback(() => {
+      console.log(myReviews);
       getMyReviews(email, setMyReviewStore); // 서버에서 리뷰 데이터 새로 가져오기
     }, []),
   );

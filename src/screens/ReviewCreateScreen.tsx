@@ -67,6 +67,7 @@ const ReviewCreateScreen = () => {
           onPress={() =>
             addReview(
               user.email,
+              user.uid,
               name,
               category,
               address,

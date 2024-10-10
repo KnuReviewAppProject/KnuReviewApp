@@ -66,7 +66,7 @@ const DetailLocationScreen = () => {
     totalReviews > 0 ? Number((totalRating / totalReviews).toFixed(1)) : 0; // 소수점 첫째자리
 
     // 각 유저의 리뷰 수와 추천/비추천 수 계산
-  const userReviewStats = filteredReviews.reduce((acc, review) => {
+  const userReviewStats = displayedReviews.reduce((acc, review) => {
     const { nickname, recommend } = review;
     if (!acc[nickname]) {
       acc[nickname] = { reviews: 0, good: 0, bad: 0 };
@@ -268,42 +268,40 @@ const DetailLocationScreen = () => {
         }}
       />
 
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingHorizontal: 30,
+        }}>
+        <BouncyCheckbox
+          size={20}
+          unFillColor="white"
+          fillColor="#287BF3"
+          iconStyle={{borderRadius: 3, marginRight: 5}}
+          innerIconStyle={{borderRadius: 3}}
+          disableText
+          isChecked={isOnlyPic}
+          onPress={() => setIsOnlyPic(!isOnlyPic)}
+        />
+        <Text>사진 리뷰만 보기 </Text>
+      </View>
+
       {displayedReviews.length === 0 ? (
         <EmptyReviewMessage />
       ) : (
-        <>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              paddingHorizontal: 30,
-            }}>
-            <BouncyCheckbox
-              size={20}
-              unFillColor="white"
-              fillColor="#287BF3"
-              iconStyle={{borderRadius: 3, marginRight: 5}}
-              innerIconStyle={{borderRadius: 3}}
-              disableText
-              isChecked={isOnlyPic}
-              onPress={() => setIsOnlyPic(!isOnlyPic)}
+        <FlatList
+          style={{paddingHorizontal: 30}}
+          data={displayedReviews}
+          renderItem={({item}) => (
+            <ReviewsRenderItem
+              data={item}
+              userStats={userReviewStats[item.nickname]}
             />
-            <Text>사진 리뷰만 보기 </Text>
-          </View>
-
-          <FlatList
-            style={{paddingHorizontal: 30}}
-            data={displayedReviews}
-            renderItem={({item}) => (
-              <ReviewsRenderItem
-                data={item}
-                userStats={userReviewStats[item.nickname]}
-              />
-            )}
-            keyExtractor={(_, index) => index.toString()}
-            scrollEnabled={false}
-          />
-        </>
+          )}
+          keyExtractor={(_, index) => index.toString()}
+          scrollEnabled={false}
+        />
       )}
     </ScrollView>
   );

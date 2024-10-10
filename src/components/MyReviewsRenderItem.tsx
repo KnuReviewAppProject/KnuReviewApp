@@ -1,10 +1,11 @@
 import React from 'react';
 import {
+    Alert,
     FlatList,
     Image,
     Text,
     TouchableOpacity,
-    View
+    View,
 } from 'react-native';
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
 import { deleteReview } from '../utils/API/LocationAPI';
@@ -19,11 +20,13 @@ interface MyReviewsRenderItemProps {
     good: number;
     bad: number;
   };
+  onDeleteReview: (reviewID: string) => void;
 }
 
 const MyReviewsRenderItem: React.FC<MyReviewsRenderItemProps> = ({
   data,
   userReviewStats,
+  onDeleteReview,
 }) => {
   // Logic
   const user = useUserStore(state => state.user);
@@ -33,6 +36,33 @@ const MyReviewsRenderItem: React.FC<MyReviewsRenderItemProps> = ({
         data.createdAt._seconds * 1000 + data.createdAt._nanoseconds / 1000000,
       ) // Timestamp를 밀리초로 변환하여 Date 객체 생성
     : null;
+
+  const handleDelete = () => {
+    Alert.alert(
+      '리뷰 삭제',
+      '정말로 이 리뷰를 삭제하시겠습니까?',
+      [
+        {text: '취소', style: 'cancel'},
+        {
+          text: '삭제',
+          onPress: () => {
+            deleteReview(
+              data.id, // 리뷰 ID로 삭제 API 호출
+              () => {
+                Alert.alert('리뷰가 성공적으로 삭제되었습니다.');
+                onDeleteReview(data.id); // 삭제 후 콜백 호출하여 상태 업데이트
+              },
+              error => {
+                console.error('리뷰 삭제 중 에러:', error);
+                Alert.alert('리뷰 삭제에 실패했습니다.');
+              },
+            );
+          },
+        },
+      ],
+      {cancelable: true},
+    );
+  };
 
   // View
   return (
@@ -175,7 +205,7 @@ const MyReviewsRenderItem: React.FC<MyReviewsRenderItemProps> = ({
             borderRadius: 15,
             backgroundColor: '#F4F4F4',
           }}
-          onPress={() => deleteReview(user.uid)}>
+          onPress={handleDelete}>
           <Text>삭제</Text>
         </TouchableOpacity>
       </View>

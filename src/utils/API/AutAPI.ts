@@ -5,9 +5,18 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import axios from 'axios';
 import { Alert, Platform } from 'react-native';
 import { ROOT_NAVIGATION } from '../../@types/ROOT_NAVIGATION';
+import {
+  useMyReviewStore,
+  useReviewStore,
+  useUserStore,
+} from '../../zustand/store';
 import { User } from '../data/type';
 
 const API_URL = Platform.OS === 'ios' ? IOS_API_URL : ANDROID_API_URL;
+
+const {clearUser} = useUserStore.getState();
+const {clearReviews} = useReviewStore.getState();
+const {clearMyReviews} = useMyReviewStore.getState();
 
 // 이메일 중복 여부 판단 api 함수
 export const AuthEmail = (
@@ -239,6 +248,9 @@ export const Logout = (
       .signOut()
       .then(() => {
         console.log('로그아웃');
+        clearUser();
+        clearReviews();
+        clearMyReviews();
         navigation.navigate('Login');
       })
       .catch(err => console.log('try 에러: ', err));
@@ -311,7 +323,7 @@ export const EditProfileImage = (
   // }
 
   try {
-    if(imageData == null){
+    if (imageData == null) {
       axios
         .post(`${API_URL}/api/edit-profile-image`, {
           uid: uid,
@@ -325,7 +337,7 @@ export const EditProfileImage = (
           }
         })
         .catch(err => console.log(err));
-    }else{
+    } else {
       if (Platform.OS === 'android') {
         storage()
           .ref(fileName)
@@ -340,8 +352,8 @@ export const EditProfileImage = (
                 imageURL: downloadURL,
               })
               .then(res => {
-                if(res.status === 200){
-                  console.log(res.data)
+                if (res.status === 200) {
+                  console.log(res.data);
                   navigation.goBack();
                 }
               })
@@ -362,8 +374,8 @@ export const EditProfileImage = (
                 imageURL: downloadURL,
               })
               .then(res => {
-                if(res.status === 200){
-                  console.log(res.data)
+                if (res.status === 200) {
+                  console.log(res.data);
                   navigation.goBack();
                 }
               })
@@ -372,7 +384,6 @@ export const EditProfileImage = (
           .catch(err => console.log('try 에러: ', err));
       }
     }
-
   } catch (error) {
     console.log('error 에러: ', error);
   }
@@ -391,6 +402,9 @@ export const Unsubscribe = (
         email: email,
       })
       .then(() => {
+        clearUser();
+        clearReviews();
+        clearMyReviews();
         navigation.navigate('Login');
       })
       .catch(err => console.log('try 에러: ', err));

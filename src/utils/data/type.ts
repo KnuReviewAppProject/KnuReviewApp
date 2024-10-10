@@ -31,6 +31,7 @@ export type ReviewImage = {
 
 // 리뷰 데이터 타입 정의
 export type Review = {
+  id: string,
   nickname: string;
   photoURL: string;
   email: string;

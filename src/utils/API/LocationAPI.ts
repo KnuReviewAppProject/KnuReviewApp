@@ -106,20 +106,35 @@ export const getMyReviews = (
 };
 
 // 리뷰 삭제 api 함수
-export const deleteReview = (uid: string) => {
+export const deleteReview = (
+  reviewID: string,
+  onSuccess: () => void, // 삭제 성공 시 호출될 함수
+  onError: (error: any) => void, // 삭제 실패 시 호출될 함수
+) => {
+  if (!reviewID) {
+    Alert.alert('리뷰 ID가 제공되지 않았습니다.');
+    return;
+  }
+
   try {
     axios
       .delete(`${API_URL}/api/delete-review`, {
-        data: {
-          uid,
-        },
+        data: {reviewID}, // DELETE 요청에 데이터를 전송
       })
       .then(res => {
-        console.log(res.status);
-        Alert.alert("리뷰 삭제", "리뷰가 삭제 됐습니다.")
+        if (res.status === 200) {
+          console.log('리뷰 삭제 성공:', res.data);
+          onSuccess(); // 성공 시 콜백 호출
+        }
       })
-      .catch(err => console.log(`try 에러: ${err}`));
+      .catch(err => {
+        console.error('리뷰 삭제 실패:', err);
+        onError(err); // 실패 시 콜백 호출
+        Alert.alert('리뷰 삭제에 실패했습니다.');
+      });
   } catch (error) {
-    console.log(`catch 에러: ${error}`);
+    console.error('리뷰 삭제 중 오류:', error);
+    onError(error); // 실패 시 콜백 호출
+    Alert.alert('리뷰 삭제 중 문제가 발생했습니다.');
   }
 };

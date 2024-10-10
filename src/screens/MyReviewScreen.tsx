@@ -32,6 +32,12 @@ const MyReviewScreen = () => {
     return acc;
   }, {} as Record<string, {reviews: number; good: number; bad: number}>);
 
+  // 리뷰 삭제 후, 상태 업데이트를 위해 필터링하는 함수
+  const handleDeleteReview = (reviewID: string) => {
+    const updatedReviews = myReviews.filter(review => review.id !== reviewID); // 삭제된 리뷰 제외한 목록 생성
+    setMyReviewStore(updatedReviews); // 상태 업데이트
+  };
+
   useEffect(() => {
     navigation.setOptions({
       headerShadowVisible: false,
@@ -63,7 +69,9 @@ const MyReviewScreen = () => {
         <Text style={{textAlign: 'center', marginVertical: 20}}>
           작성한 리뷰가 없습니다.
         </Text>
+        
       ) : (
+        
         <FlatList
           style={{paddingHorizontal: 30}}
           data={myReviews}
@@ -71,6 +79,7 @@ const MyReviewScreen = () => {
             <MyReviewsRenderItem
               data={item}
               userReviewStats={userReviewStats[item.nickname]}
+              onDeleteReview={handleDeleteReview}
             />
           )}
           keyExtractor={(_, index) => index.toString()}

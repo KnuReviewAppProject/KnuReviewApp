@@ -30,7 +30,6 @@ const DetailLocationScreen = () => {
   const [isOnlyPic, setIsOnlyPic] = useState<boolean>(false);
 
   const reviews = useReviewStore(state => state.reviews);
-  const setReviewStore = useReviewStore(state => state.setReviews);
 
   const filteredReviews = reviews.filter(review => review.name === data.name);
 
@@ -99,7 +98,7 @@ const DetailLocationScreen = () => {
   // useFocusEffect로 스크린이 다시 활성화될 때마다 최신 리뷰를 가져옴
   useFocusEffect(
     React.useCallback(() => {
-      getReview(setReviewStore); // 서버에서 리뷰 데이터 새로 가져오기
+      getReview(); // 서버에서 리뷰 데이터 새로 가져오기
     }, []),
   );
 

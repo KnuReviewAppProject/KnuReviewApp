@@ -4,6 +4,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import axios from 'axios';
 import { Alert, Platform } from 'react-native';
 import { ROOT_NAVIGATION } from '../../@types/ROOT_NAVIGATION';
+import { useReviewStore } from '../../zustand/store';
 import { Restaurant, Review, ReviewImage } from '../data/type';
 import { Logout } from './AutAPI';
 
@@ -73,14 +74,15 @@ export const addReview = (
 };
 
 // 리뷰 읽기 api 함수
-export const getReview = (setReviewStore: (data: Review[]) => void) => {
+export const getReview = () => {
+  const {setReviews} = useReviewStore.getState();
+
   try {
     axios
       .get(`${API_URL}/api/get-reviews`)
       .then(res => {
-        // 이제 사용자 정보가 포함된 리뷰 데이터를 출력
         console.log(res.data);
-        setReviewStore(res.data); // 사용자 정보가 포함된 리뷰 데이터를 상태로 설정
+        setReviews(res.data);
       })
       .catch(err => console.log(`try 에러: ${err}`));
   } catch (error) {
@@ -124,6 +126,7 @@ export const deleteReview = (
       .then(res => {
         if (res.status === 200) {
           console.log('리뷰 삭제 성공:', res.data);
+          getReview();
           onSuccess(); // 성공 시 콜백 호출
         }
       })

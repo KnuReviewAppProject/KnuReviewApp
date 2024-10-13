@@ -141,3 +141,42 @@ export const deleteReview = (
     Alert.alert('리뷰 삭제 중 문제가 발생했습니다.');
   }
 };
+
+// 북마크 추가/삭제 API 함수
+export const setBookmark = async (
+  name: string,
+  type: string,
+  email: string,
+  isBookmarked: boolean,
+) => {
+  console.log(name, type, email, isBookmarked);
+  try {
+    const response = await axios.post(`${API_URL}/api/set-bookmark`, {
+      name,
+      type,
+      email,
+      isBookmarked,
+    });
+    if (response.status === 200) {
+      return response.data.isBookmarked;
+    }
+  } catch (error) {
+    console.error('북마크 처리 실패:', error);
+    return false;
+  }
+};
+
+// 북마크 여부 확인 API 함수
+export const checkBookmarks = async (email: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/api/check-bookmarks`, {
+      email,
+    });
+    if (response.status === 200) {
+      return response.data.bookmarks; // 북마크된 항목 반환
+    }
+  } catch (error) {
+    console.error('북마크 조회 실패:', error);
+    return [];
+  }
+};

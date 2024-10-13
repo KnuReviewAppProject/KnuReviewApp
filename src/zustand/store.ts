@@ -1,7 +1,8 @@
 import { create } from 'zustand';
-import { Review, User } from '../utils/data/type';
+import { Bookmark, Review, User } from '../utils/data/type';
 import {
   AuthTokenStoreState,
+  BookmarkStoreState,
   EmailStoreState,
   MyReviewStoreState,
   ReviewStoreState,
@@ -72,4 +73,28 @@ export const useMyReviewStore = create<MyReviewStoreState>(set => ({
   myreviews: [],
   setMyReviews: (myreviews: Review[]) => set({myreviews}),
   clearMyReviews: () => set({myreviews: []}),
+}));
+
+export const useBookmarkStore = create<BookmarkStoreState>(set => ({
+  bookmark: {
+    name: '',
+    type: '',
+    email: '',
+  },
+  isBookmarked: false, // 북마크 상태 추가
+  setBookmark: (bookmark: Bookmark, isBookmarked: boolean) =>
+    set({bookmark, isBookmarked}),
+  toggleBookmark: () =>
+    set(state => ({
+      isBookmarked: !state.isBookmarked, // 북마크 상태 반전
+    })),
+  clearBookmark: () =>
+    set({
+      bookmark: {
+        name: '',
+        type: '',
+        email: '',
+      },
+      isBookmarked: false,
+    }),
 }));

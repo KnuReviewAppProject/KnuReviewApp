@@ -12,6 +12,7 @@ export type Restaurant = {
   description?: string;
   options?: string;
   businessHours?: string;
+  type: string;
 };
 
 // User 타입 정의
@@ -48,3 +49,9 @@ export type Review = {
     _nanoseconds: number;
   }; // 서버에서 생성된 시간 정보
 };
+
+export type Bookmark = {
+  name: string,
+  type: string,
+  email: string,
+}

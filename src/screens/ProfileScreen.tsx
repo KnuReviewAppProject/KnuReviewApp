@@ -129,7 +129,8 @@ const ProfileScreen = () => {
           alignItems: 'center',
           paddingHorizontal: 30,
           marginBottom: 30,
-        }}>
+        }}
+        onPress={() => navigation.navigate('BookmarkTabs')}>
         <Image
           source={require('../assets/bookmark.png')}
           style={{width: 24, height: 24, marginRight: 15}}

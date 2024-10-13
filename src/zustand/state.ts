@@ -1,4 +1,4 @@
-import { Review, User } from '../utils/data/type';
+import { Bookmark, Review, User } from '../utils/data/type';
 
 export interface EmailStoreState {
   email: string;
@@ -36,4 +36,12 @@ export interface MyReviewStoreState {
   myreviews: Review[];
   setMyReviews: (reviews: Review[]) => void;
   clearMyReviews: () => void;
+}
+
+export interface BookmarkStoreState {
+  bookmark: Bookmark;
+  isBookmarked: boolean;
+  setBookmark: (bookmark: Bookmark, isBookmarked: boolean) => void;
+  toggleBookmark: () => void;
+  clearBookmark: () => void;
 }

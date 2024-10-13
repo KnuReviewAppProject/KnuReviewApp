@@ -21,4 +21,5 @@ declare type ROOT_NAVIGATION = {
   Tabs: undefined;
   LocationMapTabs: undefined;
   ProfileTabs: undefined;
+  BookmarkTabs: undefined;
 };

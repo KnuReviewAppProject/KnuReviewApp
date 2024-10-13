@@ -17,8 +17,8 @@ import useNavigation from '../../node_modules/@react-navigation/core/src/useNavi
 import { ROOT_NAVIGATION } from '../@types/ROOT_NAVIGATION';
 import EmptyReviewMessage from '../components/EmptyReviewMessage';
 import ReviewsRenderItem from '../components/ReviewsRenderItem';
-import { getReview } from '../utils/API/LocationAPI';
-import { useReviewStore } from '../zustand/store';
+import { checkBookmarks, getReview, setBookmark } from '../utils/API/LocationAPI';
+import { useReviewStore, useUserStore } from '../zustand/store';
 
 const DetailLocationScreen = () => {
   // Logic
@@ -28,12 +28,15 @@ const DetailLocationScreen = () => {
   const {data} = route.params;
 
   const [isOnlyPic, setIsOnlyPic] = useState<boolean>(false);
+  const [isBookmarked, setIsBookmarked] = useState<boolean>(false); // 북마크 상태
 
-  const reviews = useReviewStore(state => state.reviews);
+    
+  const user = useUserStore(state => state.user);
+  const reviews = useReviewStore(state => state.reviews).filter(
+    review => review.name === data.name,
+  );
 
-  const filteredReviews = reviews.filter(review => review.name === data.name);
-
-  const sortedReviews = filteredReviews.sort((a, b) => {
+  const sortedReviews = reviews.sort((a, b) => {
     const aDate =
       a.createdAt && typeof a.createdAt._seconds === 'number'
         ? new Date(
@@ -56,19 +59,16 @@ const DetailLocationScreen = () => {
     ? sortedReviews.filter(review => review.images && review.images.length > 0)
     : sortedReviews;
 
-  const totalReviews = filteredReviews.length;
-  const totalRating = filteredReviews.reduce(
-    (acc, review) => acc + review.rating,
-    0,
-  );
+  const totalReviews = sortedReviews.length;
+  const totalRating = sortedReviews.reduce((acc, review) => acc + review.rating, 0);
   const rating =
     totalReviews > 0 ? Number((totalRating / totalReviews).toFixed(1)) : 0; // 소수점 첫째자리
 
-    // 각 유저의 리뷰 수와 추천/비추천 수 계산
+  // 각 유저의 리뷰 수와 추천/비추천 수 계산
   const userReviewStats = displayedReviews.reduce((acc, review) => {
-    const { nickname, recommend } = review;
+    const {nickname, recommend} = review;
     if (!acc[nickname]) {
-      acc[nickname] = { reviews: 0, good: 0, bad: 0 };
+      acc[nickname] = {reviews: 0, good: 0, bad: 0};
     }
     acc[nickname].reviews += 1; // 리뷰 수 증가
     if (recommend === 'good') {
@@ -77,7 +77,19 @@ const DetailLocationScreen = () => {
       acc[nickname].bad += 1; // 비추천 수 증가
     }
     return acc;
-  }, {} as Record<string, { reviews: number; good: number; bad: number }>);
+  }, {} as Record<string, {reviews: number; good: number; bad: number}>);
+
+// 북마크 추가/삭제 요청
+const handleBookmarkPress = async () => {
+  const newIsBookmarked = !isBookmarked; // 현재 상태 반전
+  const updatedIsBookmarked = await setBookmark(
+    data.name,
+    data.type,
+    user.email,
+    newIsBookmarked,
+  );
+  setIsBookmarked(updatedIsBookmarked); // 북마크 상태 업데이트
+};
 
   useEffect(() => {
     navigation.setOptions({
@@ -101,6 +113,19 @@ const DetailLocationScreen = () => {
       getReview(); // 서버에서 리뷰 데이터 새로 가져오기
     }, []),
   );
+
+// 서버에서 북마크 여부 확인
+useEffect(() => {
+  const fetchBookmarkStatus = async () => {
+    const bookmarks = await checkBookmarks(user.email);
+    const isAlreadyBookmarked = bookmarks.some(
+      (bookmark: {name: string; type: string}) =>
+        bookmark.name === data.name && bookmark.type === data.type,
+    );
+    setIsBookmarked(isAlreadyBookmarked); // 해당 장소가 이미 북마크되었는지 확인
+  };
+  fetchBookmarkStatus();
+}, []);
 
   // View
   return (
@@ -210,14 +235,19 @@ const DetailLocationScreen = () => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <TouchableOpacity>
-            <Image
-              source={require('../assets/unclicked_star.png')}
-              style={{width: 24, height: 24, marginBottom: 10}}
-              resizeMode="contain"
-            />
-            <Text>저장</Text>
-          </TouchableOpacity>
+          <TouchableOpacity onPress={handleBookmarkPress}>
+        <Image
+          source={
+            isBookmarked
+              ? require('../assets/clicked_star.png')
+              : require('../assets/unclicked_star.png')
+          }
+          style={{ width: 24, height: 24, marginBottom: 10 }}
+          resizeMode="contain"
+        />
+        <Text>저장</Text>
+      </TouchableOpacity>
+
         </View>
 
         <View

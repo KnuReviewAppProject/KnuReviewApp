@@ -180,3 +180,16 @@ export const checkBookmarks = async (email: string) => {
     return [];
   }
 };
+
+// 북마크 읽기 api 함수
+export const getBookmarks = async (email: string) => {
+  try {
+    const response = await axios.post(`${API_URL}/api/get-bookmarks`, {email});
+    if (response.status === 200) {
+      return response.data; // 서버에서 반환한 북마크 데이터
+    }
+  } catch (error) {
+    console.error('북마크 가져오기 실패:', error);
+    return [];
+  }
+};

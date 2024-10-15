@@ -163,9 +163,9 @@ const LocationMapScreen = () => {
               onTap={() => console.log(`Tapped on: ${restaurant.name}`)}
               anchor={{x: 0.5, y: 1}}
               width={20}
-              height={20}>
-              <View style={{width: 50, height: 50, backgroundColor: 'red'}} />
-            </NaverMapMarkerOverlay>
+              height={20}
+              image={require('../assets/marker.png')}
+            />
           ))}
         </NaverMapView>
 
@@ -178,10 +178,7 @@ const LocationMapScreen = () => {
           <BottomSheetScrollView>
             <BottomSheetScrollViewHeader />
             {restaurants.map((data, index) => (
-              <BottomSheetScrollViewRenderItem
-                data={data}
-                index={index}
-              />
+              <BottomSheetScrollViewRenderItem data={data} index={index} />
             ))}
           </BottomSheetScrollView>
         </BottomSheetModal>

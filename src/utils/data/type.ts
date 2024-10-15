@@ -51,6 +51,7 @@ export type Review = {
 };
 
 export type Bookmark = {
+  id: string,
   name: string,
   type: string,
   email: string,

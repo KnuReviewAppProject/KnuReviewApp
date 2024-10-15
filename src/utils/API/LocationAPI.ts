@@ -148,18 +148,20 @@ export const setBookmark = async (
   type: string,
   email: string,
   isBookmarked: boolean,
+  setIsBookmarked: (isBookmarked: boolean) => void,
 ) => {
-  console.log(name, type, email, isBookmarked);
   try {
-    const response = await axios.post(`${API_URL}/api/set-bookmark`, {
-      name,
-      type,
-      email,
-      isBookmarked,
-    });
-    if (response.status === 200) {
-      return response.data.isBookmarked;
-    }
+    await axios
+      .post(`${API_URL}/api/set-bookmark`, {
+        name,
+        type,
+        email,
+        isBookmarked,
+      })
+      .then(res => {
+        console.log(res.status);
+        setIsBookmarked(res.data.isBookmarked);
+      });
   } catch (error) {
     console.error('북마크 처리 실패:', error);
     return false;

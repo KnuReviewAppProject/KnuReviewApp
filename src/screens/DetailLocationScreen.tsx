@@ -30,7 +30,6 @@ const DetailLocationScreen = () => {
   const [isOnlyPic, setIsOnlyPic] = useState<boolean>(false);
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false); // 북마크 상태
 
-    
   const user = useUserStore(state => state.user);
   const reviews = useReviewStore(state => state.reviews).filter(
     review => review.name === data.name,
@@ -60,7 +59,10 @@ const DetailLocationScreen = () => {
     : sortedReviews;
 
   const totalReviews = sortedReviews.length;
-  const totalRating = sortedReviews.reduce((acc, review) => acc + review.rating, 0);
+  const totalRating = sortedReviews.reduce(
+    (acc, review) => acc + review.rating,
+    0,
+  );
   const rating =
     totalReviews > 0 ? Number((totalRating / totalReviews).toFixed(1)) : 0; // 소수점 첫째자리
 
@@ -79,17 +81,17 @@ const DetailLocationScreen = () => {
     return acc;
   }, {} as Record<string, {reviews: number; good: number; bad: number}>);
 
-// 북마크 추가/삭제 요청
-const handleBookmarkPress = async () => {
-  const newIsBookmarked = !isBookmarked; // 현재 상태 반전
-  const updatedIsBookmarked = await setBookmark(
-    data.name,
-    data.type,
-    user.email,
-    newIsBookmarked,
-  );
-  setIsBookmarked(updatedIsBookmarked); // 북마크 상태 업데이트
-};
+  // 북마크 추가/삭제 요청
+  const handleBookmarkPress = async () => {
+    const newIsBookmarked = !isBookmarked;
+    setBookmark(
+      data.name,
+      data.type,
+      user.email,
+      newIsBookmarked,
+      setIsBookmarked,
+    ); // setIsBookmarked 전달
+  };
 
   useEffect(() => {
     navigation.setOptions({
@@ -114,18 +116,18 @@ const handleBookmarkPress = async () => {
     }, []),
   );
 
-// 서버에서 북마크 여부 확인
-useEffect(() => {
-  const fetchBookmarkStatus = async () => {
-    const bookmarks = await checkBookmarks(user.email);
-    const isAlreadyBookmarked = bookmarks.some(
-      (bookmark: {name: string; type: string}) =>
-        bookmark.name === data.name && bookmark.type === data.type,
-    );
-    setIsBookmarked(isAlreadyBookmarked); // 해당 장소가 이미 북마크되었는지 확인
-  };
-  fetchBookmarkStatus();
-}, []);
+  // 서버에서 북마크 여부 확인
+  useEffect(() => {
+    const fetchBookmarkStatus = async () => {
+      const bookmarks = await checkBookmarks(user.email);
+      const isAlreadyBookmarked = bookmarks.some(
+        (bookmark: {name: string; type: string}) =>
+          bookmark.name === data.name && bookmark.type === data.type,
+      );
+      setIsBookmarked(isAlreadyBookmarked); // 해당 장소가 이미 북마크되었는지 확인
+    };
+    fetchBookmarkStatus();
+  }, []);
 
   // View
   return (
@@ -236,18 +238,17 @@ useEffect(() => {
             alignItems: 'center',
           }}>
           <TouchableOpacity onPress={handleBookmarkPress}>
-        <Image
-          source={
-            isBookmarked
-              ? require('../assets/clicked_star.png')
-              : require('../assets/unclicked_star.png')
-          }
-          style={{ width: 24, height: 24, marginBottom: 10 }}
-          resizeMode="contain"
-        />
-        <Text>저장</Text>
-      </TouchableOpacity>
-
+            <Image
+              source={
+                isBookmarked
+                  ? require('../assets/clicked_star.png')
+                  : require('../assets/unclicked_star.png')
+              }
+              style={{width: 24, height: 24, marginBottom: 10}}
+              resizeMode="contain"
+            />
+            <Text>저장</Text>
+          </TouchableOpacity>
         </View>
 
         <View

@@ -317,22 +317,19 @@ const DetailLocationScreen = () => {
         <Text>사진 리뷰만 보기 </Text>
       </View>
 
-      {displayedReviews.length === 0 ? (
-        <EmptyReviewMessage />
-      ) : (
-        <FlatList
-          style={{paddingHorizontal: 30}}
-          data={displayedReviews}
-          renderItem={({item}) => (
-            <ReviewsRenderItem
-              data={item}
-              userStats={userReviewStats[item.nickname]}
-            />
-          )}
-          keyExtractor={(_, index) => index.toString()}
-          scrollEnabled={false}
-        />
-      )}
+      <FlatList
+        style={{paddingHorizontal: 30}}
+        data={displayedReviews}
+        renderItem={({item}) => (
+          <ReviewsRenderItem
+            data={item}
+            userStats={userReviewStats[item.nickname]}
+          />
+        )}
+        keyExtractor={(_, index) => index.toString()}
+        scrollEnabled={false}
+        ListEmptyComponent={<EmptyReviewMessage />}
+      />
     </ScrollView>
   );
 };

@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Alert, Platform } from 'react-native';
 import { ROOT_NAVIGATION } from '../../@types/ROOT_NAVIGATION';
 import { useReviewStore } from '../../zustand/store';
-import { Restaurant, Review, ReviewImage } from '../data/type';
+import { Bookmark, Restaurant, Review, ReviewImage } from '../data/type';
 import { Logout } from './AutAPI';
 
 const API_URL = Platform.OS === 'ios' ? IOS_API_URL : ANDROID_API_URL;
@@ -184,14 +184,37 @@ export const checkBookmarks = async (email: string) => {
 };
 
 // 북마크 읽기 api 함수
-export const getBookmarks = async (email: string) => {
+export const getBookmarks = async (
+  email: string,
+  setBookmarks: (data: Bookmark[]) => void,
+) => {
   try {
-    const response = await axios.post(`${API_URL}/api/get-bookmarks`, {email});
-    if (response.status === 200) {
-      return response.data; // 서버에서 반환한 북마크 데이터
-    }
+    await axios
+      .post(`${API_URL}/api/get-bookmarks`, {email})
+      .then(res => {
+        console.log(res.data);
+        setBookmarks(res.data);
+      })
+      .catch(err => `try 에러: ${err}`);
   } catch (error) {
     console.error('북마크 가져오기 실패:', error);
     return [];
+  }
+};
+
+// 북마크 삭제 API 함수
+export const deleteBookmark = async (
+  id: string,
+  onSuccess: () => void,
+  onError: (error: any) => void,
+) => {
+  try {
+    const response = await axios.delete(`${API_URL}/api/delete-bookmark/${id}`);
+    if (response.status === 200) {
+      onSuccess(); // 삭제 성공 콜백
+    }
+  } catch (error) {
+    console.error('북마크 삭제 실패:', error);
+    onError(error); // 삭제 실패 콜백
   }
 };

@@ -56,3 +56,8 @@ export type Bookmark = {
   type: string,
   email: string,
 }
+
+export type BookmarkSection = {
+  title: string,
+  data: Bookmark[]
+}

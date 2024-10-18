@@ -218,3 +218,30 @@ export const deleteBookmark = async (
     onError(error); // 삭제 실패 콜백
   }
 };
+
+// 검색 API 함수
+export const searchKnuLocation = async (
+  keyword: string,
+  setList: (data: []) => void,
+) => {
+  const url = 'https://dapi.kakao.com/v2/local/search/keyword.json';
+
+  try {
+    axios
+      .get(url, {
+        headers: {
+          Authorization: `KakaoAK c402945610056d1e384fe119794d7de6`,
+        },
+        params: {
+          query: keyword,
+        },
+      })
+      .then(res => {
+        const results = res.data.documents;
+        setList(results);
+      })
+      .catch(err => console.log(`try 에러: ${err}`));
+  } catch (error) {
+    console.log(`catch 에러: ${error}`);
+  }
+};

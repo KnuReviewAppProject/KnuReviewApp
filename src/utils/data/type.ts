@@ -61,3 +61,13 @@ export type BookmarkSection = {
   title: string,
   data: Bookmark[]
 }
+
+export type SearchLocation = {
+  address_name: string;
+  category_group_name: string;
+  category_name: string;
+  distance: string;
+  place_name: string;
+  x: string;
+  y: string;
+};

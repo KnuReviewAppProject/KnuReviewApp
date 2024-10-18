@@ -18,8 +18,11 @@ declare type ROOT_NAVIGATION = {
     imageURL: string;
   };
   MyReview: undefined;
+  SearchLocation: undefined;
   Tabs: undefined;
-  LocationMapTabs: undefined;
+  LocationMapTabs: {
+    selectedLocation?: SearchLocation;
+  };
   ProfileTabs: undefined;
   BookmarkTabs: undefined;
 };

@@ -1,4 +1,6 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {
+  createNativeStackNavigator
+} from '@react-navigation/native-stack';
 import React from 'react';
 import { ROOT_NAVIGATION } from '../@types/ROOT_NAVIGATION';
 import AuthCodeScreen from '../screens/AuthCodeScreen';
@@ -9,12 +11,16 @@ import LoginScreen from '../screens/LoginScreen';
 import MyReviewScreen from '../screens/MyReviewScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import ReviewCreateScreen from '../screens/ReviewCreateScreen';
+import SearchLocationScreen from '../screens/SearchLocationScreen';
 import SignupFinishedScreen from '../screens/SignupFinishedScreen';
 import Tabs from './Tabs';
 
 const Stack = createNativeStackNavigator<ROOT_NAVIGATION>();
 
 const Stacks = () => {
+  // Logic
+
+  // View
   return (
     <Stack.Navigator initialRouteName="Login">
       <Stack.Screen
@@ -42,6 +48,12 @@ const Stacks = () => {
       <Stack.Screen name="ReviewCreate" component={ReviewCreateScreen} />
 
       <Stack.Screen name="MyReview" component={MyReviewScreen} />
+
+      <Stack.Screen
+        name="SearchLocation"
+        component={SearchLocationScreen}
+        options={{headerShown: false}}
+      />
 
       <Stack.Screen
         name="Tabs"

@@ -9,6 +9,9 @@ import ProfileScreen from '../screens/ProfileScreen';
 const Tab = createBottomTabNavigator<ROOT_NAVIGATION>();
 
 const Tabs = () => {
+  // Logic
+
+  // View
   return (
     <Tab.Navigator
       initialRouteName="LocationMapTabs"

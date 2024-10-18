@@ -1,6 +1,6 @@
 import { HeaderBackButton } from '@react-navigation/elements';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { FlatList, SafeAreaView, TextInput, View } from 'react-native';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { ROOT_NAVIGATION } from '../@types/ROOT_NAVIGATION';
@@ -17,6 +17,8 @@ const SearchLocationScreen = () => {
   const [list, setList] = useState<SearchLocation[]>([]); // 검색 결과 리스트를 담는 state
   const [isLoading, setIsLoading] = useState<boolean>(false); // 검색 중 로딩 상태
 
+  const textInputRef = useRef<TextInput>(null); // TextInput에 대한 ref 생성
+
   const onChangeKeyword = useCallback((text: string) => {
     setKeyword(text);
   }, []);
@@ -26,6 +28,13 @@ const SearchLocationScreen = () => {
     console.log(JSON.stringify(item, null, 2));
     navigation.navigate('LocationMapTabs', { selectedLocation: item });
   };
+
+  useEffect(() => {
+    // TextInput이 렌더링된 후 자동으로 focus
+    if (textInputRef.current) {
+      textInputRef.current.focus();
+    }
+  }, []);
 
   useEffect(() => {
     // 사용자가 입력을 마치고 500ms 후에만 API 요청
@@ -65,6 +74,7 @@ const SearchLocationScreen = () => {
             marginRight: 20,
           }}>
           <TextInput
+            ref={textInputRef}
             style={{
               width: '100%',
               height: 40,

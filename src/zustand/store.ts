@@ -36,7 +36,16 @@ export const useUserStore = create<UserStoreState>(set => ({
     nickname: '',
     photoURL: '',
   },
-  setUser: (user: User) => set({user}),
+  setUser: (user: User) =>
+    set({
+      user: {
+        accessToken: user.accessToken,
+        uid: user.uid,
+        email: user.email,
+        nickname: user.nickname,
+        photoURL: user.photoURL,
+      },
+    }),
   setUpdatePhotoURL: (photoURL: string | null) =>
     set(state => ({
       user: {
@@ -77,6 +86,7 @@ export const useMyReviewStore = create<MyReviewStoreState>(set => ({
 
 export const useBookmarkStore = create<BookmarkStoreState>(set => ({
   bookmark: {
+    id: '',
     name: '',
     type: '',
     email: '',
@@ -91,6 +101,7 @@ export const useBookmarkStore = create<BookmarkStoreState>(set => ({
   clearBookmark: () =>
     set({
       bookmark: {
+        id: '',
         name: '',
         type: '',
         email: '',

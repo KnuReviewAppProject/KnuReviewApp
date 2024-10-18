@@ -10,11 +10,10 @@ import {
   useReviewStore,
   useUserStore,
 } from '../../zustand/store';
-import { User } from '../data/type';
 
 const API_URL = Platform.OS === 'ios' ? IOS_API_URL : ANDROID_API_URL;
 
-const {clearUser} = useUserStore.getState();
+const {setUser, clearUser} = useUserStore.getState();
 const {clearReviews} = useReviewStore.getState();
 const {clearMyReviews} = useMyReviewStore.getState();
 
@@ -205,37 +204,38 @@ export const Login = (
   email: string,
   password: string,
   navigation: NativeStackNavigationProp<ROOT_NAVIGATION>,
-  setUserStore: (user: User) => void,
 ) => {
-  if (!email || !email.trim()) {
-    Alert.alert('입력', '이메일을 입력해주세요.');
+  if (!email && !password) {
+    return Alert.alert('로그인 실패', '이메일과 비밀번호를 입력해주세요.');
   }
 
-  if (!password || !password.trim()) {
-    Alert.alert('입력', '비밀번호를 입력해주세요.');
+  if (!email) {
+    return Alert.alert('로그인 실패', '이메일을 입력해주세요.');
   }
 
-  try {
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(result => {
-        const user = result.user;
-        axios
-          .post(`${API_URL}/api/login`, {
-            uid: user.uid,
-          })
-          .then(res => {
-            console.log(res.data);
-            setUserStore(res.data);
-            navigation.navigate('Tabs');
-          })
-          .catch(err => console.log(err));
+  if (!password) {
+    return Alert.alert('로그인 실패', '비밀번호를 입력해주세요.');
+  }
+
+  firebase
+  .auth()
+  .signInWithEmailAndPassword(email, password)
+  .then(result => {
+    const user = result.user;
+    axios
+      .post(`${API_URL}/api/login`, {
+        uid: user.uid,
+      })
+      .then(res => {
+        const result = JSON.stringify(res.data, null, 5);
+
+        console.log(result);
+        setUser(res.data);
+        navigation.navigate('Tabs');
       })
       .catch(err => console.log(err));
-  } catch (error) {
-    console.log('catch 에러: ', error);
-  }
+  })
+  .catch(err => console.log(err));
 };
 
 // 로그아웃 api

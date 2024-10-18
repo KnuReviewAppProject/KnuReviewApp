@@ -1,5 +1,6 @@
+import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Image,
   Pressable,
@@ -14,7 +15,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { ROOT_NAVIGATION } from '../@types/ROOT_NAVIGATION';
 import { Login } from '../utils/API/AutAPI';
-import { useUserStore } from '../zustand/store';
 
 const LoginScreen = () => {
   // Logic
@@ -28,13 +28,19 @@ const LoginScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<ROOT_NAVIGATION>>();
 
-  const setUserStore = useUserStore(state => state.setUser);
-
   const handleEmailSubmit = () => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
   };
+
+  // useFocusEffect로 스크린 데이터 초기화
+  useFocusEffect(
+    React.useCallback(() => {
+      setEmail('');
+      setPwd('');
+    }, []),
+  );
 
   // View
   return (
@@ -121,9 +127,9 @@ const LoginScreen = () => {
             returnKeyType="next"
             keyboardType="visible-password"
             secureTextEntry={isVisible}
-            onSubmitEditing={() =>
-              Login(email, pwd, navigation, setUserStore)
-            }
+            onSubmitEditing={() => {
+              Login(email, pwd, navigation);
+            }}
             style={{flex: 1, paddingVertical: 0}}
           />
           <View>
@@ -186,9 +192,9 @@ const LoginScreen = () => {
             borderRadius: 10,
             marginBottom: 15,
           }}
-          onPress={() =>
-            Login(email, pwd, navigation, setUserStore)
-          }>
+          onPress={() => {
+            Login(email, pwd, navigation);
+          }}>
           <Text style={{color: 'white', fontWeight: 'bold', fontSize: 16}}>
             로그인
           </Text>

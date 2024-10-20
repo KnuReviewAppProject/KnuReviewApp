@@ -1,8 +1,6 @@
-import { HeaderBackButton } from '@react-navigation/elements';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useEffect, useRef, useState } from 'react';
 import {
-  ColorValue,
   Image,
   Platform,
   Pressable,
@@ -17,7 +15,7 @@ import { ROOT_NAVIGATION } from '../@types/ROOT_NAVIGATION';
 import { AuthCode, AuthEmail } from '../utils/API/AutAPI';
 import { formatTime } from '../utils/common';
 import { isValidCode } from '../utils/RegularExpression';
-import { useAuthTokenStore, useEmailStore } from '../zustand/store';
+import { useAuthTokenStore, useEmailStore, useMessageIDStore } from '../zustand/store';
 
 const AuthCodeScreen = () => {
   // Logic
@@ -27,7 +25,6 @@ const AuthCodeScreen = () => {
   const [code, setCode] = useState<string>('');
   const [timer, setTimer] = useState<number>(300);
   const [errMsg, setErrMsg] = useState<string | null>(null);
-  const [color, setColor] = useState<ColorValue>();
 
   const inputRef = useRef<OTPTextView>(null);
 
@@ -35,9 +32,7 @@ const AuthCodeScreen = () => {
 
   const email = useEmailStore(state => state.email);
   const token = useAuthTokenStore(state => state.token);
-
-  const setEmailInStore = useEmailStore(state => state.setEmail);
-  const setAuthTokenStore = useAuthTokenStore(state => state.setToken);
+  const messageID = useMessageIDStore(state => state.messageID);
 
   const clearCode = () => {
     inputRef.current?.clear();
@@ -45,26 +40,9 @@ const AuthCodeScreen = () => {
     AuthEmail(
       email,
       setErrMsg,
-      setEmailInStore,
-      setAuthTokenStore,
-      setColor,
       navigation,
     );
   }
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerShadowVisible: false,
-      headerTitle: '',
-      headerLeft: props => (
-        <HeaderBackButton
-          {...props}
-          onPress={() => navigation.goBack()}
-          labelVisible={false}
-        />
-      ),
-    });
-  })
 
   useEffect(() => {
     let interval = setInterval(() => {
@@ -130,9 +108,8 @@ const AuthCodeScreen = () => {
             email,
             code,
             token,
+            messageID,
             setErrMsg,
-            setColor,
-            setAuthTokenStore,
             navigation,
           )
         }
@@ -147,16 +124,14 @@ const AuthCodeScreen = () => {
         {formatTime(timer)}
       </Text>
 
-      {errMsg && (
         <Text
           style={{
             marginBottom: Platform.OS === 'ios' ? 70 : 100,
             fontSize: 16,
-            color: '#F33A28',
+            color: '#FF0000',
           }}>
           {errMsg}
         </Text>
-      )}
 
       <TouchableOpacity
         style={{
@@ -182,9 +157,8 @@ const AuthCodeScreen = () => {
             email,
             code,
             token,
+            messageID,
             setErrMsg,
-            setColor,
-            setAuthTokenStore,
             navigation,
           )
         }

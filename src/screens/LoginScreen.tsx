@@ -1,4 +1,3 @@
-import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useRef, useState } from 'react';
 import {
@@ -34,13 +33,13 @@ const LoginScreen = () => {
     }
   };
 
-  // useFocusEffect로 스크린 데이터 초기화
-  useFocusEffect(
-    React.useCallback(() => {
-      setEmail('');
-      setPwd('');
-    }, []),
-  );
+  // // useFocusEffect로 스크린 데이터 초기화
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     setEmail('');
+  //     setPwd('');
+  //   }, []),
+  // );
 
   // View
   return (

@@ -29,9 +29,25 @@ const Stacks = () => {
         options={{headerShown: false}}
       />
 
-      <Stack.Screen name="AuthEmail" component={AuthEmailScreen} />
+      <Stack.Screen
+        name="AuthEmail"
+        component={AuthEmailScreen}
+        options={{
+          headerShadowVisible: false,
+          headerTitle: '',
+          headerBackTitleVisible: false,
+        }}
+      />
 
-      <Stack.Screen name="AuthCode" component={AuthCodeScreen} />
+      <Stack.Screen
+        name="AuthCode"
+        component={AuthCodeScreen}
+        options={{
+          headerShadowVisible: false,
+          headerTitle: '',
+          headerBackTitleVisible: false,
+        }}
+      />
 
       <Stack.Screen name="Register" component={RegisterScreen} />
 

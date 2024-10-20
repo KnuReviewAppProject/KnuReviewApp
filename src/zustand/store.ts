@@ -4,10 +4,11 @@ import {
   AuthTokenStoreState,
   BookmarkStoreState,
   EmailStoreState,
+  MessageIDStoreState,
   MyReviewStoreState,
   ReviewStoreState,
   UidStoreState,
-  UserStoreState,
+  UserStoreState
 } from './state';
 
 export const useEmailStore = create<EmailStoreState>(set => ({
@@ -20,6 +21,12 @@ export const useAuthTokenStore = create<AuthTokenStoreState>(set => ({
   token: '',
   setToken: (token: string) => set({token}),
   clearToken: () => set({token: ''}),
+}));
+
+export const useMessageIDStore = create<MessageIDStoreState>(set => ({
+  messageID: '',
+  setMessageID: (messageID: string) => set({messageID}),
+  clearMessageID: () => set({messageID: ''}),
 }));
 
 export const useUidStore = create<UidStoreState>(set => ({

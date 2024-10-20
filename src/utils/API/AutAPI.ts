@@ -6,6 +6,9 @@ import axios from 'axios';
 import { Alert, Platform } from 'react-native';
 import { ROOT_NAVIGATION } from '../../@types/ROOT_NAVIGATION';
 import {
+  useAuthTokenStore,
+  useEmailStore,
+  useMessageIDStore,
   useMyReviewStore,
   useReviewStore,
   useUserStore,
@@ -13,42 +16,44 @@ import {
 
 const API_URL = Platform.OS === 'ios' ? IOS_API_URL : ANDROID_API_URL;
 
+const {setToken} = useAuthTokenStore.getState();
+const {setEmail} = useEmailStore.getState();
+const {setMessageID} = useMessageIDStore.getState();
+
 const {setUser, clearUser} = useUserStore.getState();
 const {clearReviews} = useReviewStore.getState();
 const {clearMyReviews} = useMyReviewStore.getState();
 
 // 이메일 중복 여부 판단 api 함수
-export const AuthEmail = (
+export const AuthEmail = async (
   email: string,
   setErrMsg: (errMsg: string) => void,
-  setEmailInStore: (email: string) => void,
-  setAuthTokenStore: (token: string) => void,
-  setColor: (color: string) => void,
   navigation: NativeStackNavigationProp<ROOT_NAVIGATION>,
 ) => {
-  if (!email || !email.trim()) {
-    Alert.alert('알림', '이메일을 입력해주세요.');
+  if (!email) {
+    return Alert.alert('알림', '이메일을 입력해주세요.');
   }
 
   try {
-    axios
+    await axios
       .post(`${API_URL}/api/verify-email`, {email: email})
       .then(res => {
-        console.log(res.status);
-        console.log(res.data);
-        setColor('#287BF3');
-        setEmailInStore(email);
-        setAuthTokenStore(res.data.token);
+        console.log(JSON.stringify(res.data, null, 5));
+
+        setEmail(email);
+        setToken(res.data.token);
+        setMessageID(res.data.messageID);
+
         navigation.navigate('AuthCode');
       })
       .catch(err => {
         if (err.response) {
           if (err.response.status === 400) {
-            setErrMsg('입력한 이메일을 다시 확인해주세요.');
-            setColor('#FF0000');
-          } else if (err.response.status === 409) {
-            setErrMsg('이미 존재하는 이메일 입니다.');
-            setColor('#FF0000');
+            return setErrMsg('입력한 이메일을 확인해주세요.');
+          } else if (err.response.status === 401) {
+            return setErrMsg('이미 가입된 계정 이메일입니다.');
+          } else if (err.response.status === 500) {
+            return Alert.alert('이메일 인증 실패', '서버 통신 실패');
           }
         }
         console.log(err);
@@ -63,17 +68,16 @@ export const AuthCode = (
   email: string,
   code: string,
   token: string,
+  messageID: string,
   setErrMsg: (errMsg: string) => void,
-  setColor: (color: string) => void,
-  setAuthTokenStore: (token: string) => void,
   navigation: NativeStackNavigationProp<ROOT_NAVIGATION>,
 ) => {
-  if (!email || !email.trim()) {
-    Alert.alert('알림', '이메일을 입력해주세요.');
+  if (!email || !token || !messageID) {
+    return Alert.alert('알림', '다시 이메일을 입력해주세요.');
   }
 
-  if (!code || !code.trim()) {
-    Alert.alert('알림', '인증번호를 입력해주세요.');
+  if (!code) {
+    return Alert.alert('알림', '인증번호를 입력해주세요.');
   }
 
   try {
@@ -82,33 +86,31 @@ export const AuthCode = (
         email: email,
         code: code,
         token: token,
+        messageID: messageID,
       })
       .then(res => {
-        console.log(res.status);
-        console.log(res.data);
-        setAuthTokenStore(res.data.token);
+        console.log(JSON.stringify(res.data, null, 5));
+        setToken(res.data.token);
         navigation.navigate('Register');
       })
       .catch(err => {
         if (err.response) {
           if (err.response.status === 400) {
-            setErrMsg('입력한 인증코드를 다시 확인해주세요.');
-            setColor('#FF0000');
-          } else if (err.response.status === 404) {
-            setErrMsg('인증코드를 다시 발급 받아주세요.');
-            setColor('#FF0000');
+            return setErrMsg('입력한 인증코드를 다시 확인해주세요.');
+          } else if (err.response.status === 402) {
+            return setErrMsg('인증코드를 다시 발급 받아주세요.');
           } else if (err.response.status === 410) {
-            setErrMsg('인증 시간이 만료되었습니다.');
-            setColor('#FF0000');
-          } else if (err.response.status === 401) {
-            setErrMsg('인증 코드가 일치하지 않습니다.');
-            setColor('#FF0000');
+            return setErrMsg('인증 시간이 만료되었습니다.');
+          } else if (err.response.status === 404) {
+            return setErrMsg('인증 코드가 일치하지 않습니다.');
+          } else if (err.response.status === 500) {
+            return Alert.alert('인증코드 인증 실패', '서버 통신 실패');
           }
         }
         console.log(err);
       });
   } catch (error) {
-    console.log('catch에러: ', error);
+    console.log(error);
   }
 };
 
@@ -218,24 +220,24 @@ export const Login = (
   }
 
   firebase
-  .auth()
-  .signInWithEmailAndPassword(email, password)
-  .then(result => {
-    const user = result.user;
-    axios
-      .post(`${API_URL}/api/login`, {
-        uid: user.uid,
-      })
-      .then(res => {
-        const result = JSON.stringify(res.data, null, 5);
+    .auth()
+    .signInWithEmailAndPassword(email, password)
+    .then(result => {
+      const user = result.user;
+      axios
+        .post(`${API_URL}/api/login`, {
+          uid: user.uid,
+        })
+        .then(res => {
+          const result = JSON.stringify(res.data, null, 5);
 
-        console.log(result);
-        setUser(res.data);
-        navigation.navigate('Tabs');
-      })
-      .catch(err => console.log(err));
-  })
-  .catch(err => console.log(err));
+          console.log(result);
+          setUser(res.data);
+          navigation.navigate('Tabs');
+        })
+        .catch(err => console.log(err));
+    })
+    .catch(err => console.log(err));
 };
 
 // 로그아웃 api

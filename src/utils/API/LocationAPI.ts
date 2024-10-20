@@ -19,7 +19,7 @@ export const getRestaurants = (
       axios
         .get(`${API_URL}/api/getRestaurants`)
         .then(res => {
-          console.log(res.data);
+          console.log(JSON.stringify(res.data.results, null, 2));
           setRestaurants(res.data.results);
         })
         .catch(err => console.log(err));

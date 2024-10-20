@@ -1,22 +1,18 @@
-import { HeaderBackButton } from '@react-navigation/elements';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
-  ColorValue,
   Image,
   Pressable,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { ROOT_NAVIGATION } from '../@types/ROOT_NAVIGATION';
 import { AuthEmail } from '../utils/API/AutAPI';
 import { isValidEmail } from '../utils/RegularExpression';
-import { useAuthTokenStore, useEmailStore } from '../zustand/store';
-
 
 const AuthEmailScreen = () => {
   // Logic
@@ -26,27 +22,8 @@ const AuthEmailScreen = () => {
   const [email, setEmail] = useState<string>('');
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [errMsg, setErrMsg] = useState<string | null>(null);
-  const [color, setColor] = useState<ColorValue>();
-
 
   const isEmailValid = isValidEmail(email);
-
-  const setEmailInStore = useEmailStore(state => state.setEmail);
-  const setAuthTokenStore = useAuthTokenStore(state => state.setToken);
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerShadowVisible: false,
-      headerTitle: '',
-      headerLeft: props => (
-        <HeaderBackButton
-          {...props}
-          onPress={() => navigation.goBack()}
-          labelVisible={false}
-        />
-      ),
-    });
-  })
 
   // View
   return (
@@ -98,15 +75,7 @@ const AuthEmailScreen = () => {
           autoCapitalize="none"
           keyboardType="email-address"
           onSubmitEditing={() =>
-            isEmailValid &&
-            AuthEmail(
-              email,
-              setErrMsg,
-              setEmailInStore,
-              setAuthTokenStore,
-              setColor,
-              navigation,
-            )
+            isEmailValid && AuthEmail(email, setErrMsg, navigation)
           }
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
@@ -127,11 +96,14 @@ const AuthEmailScreen = () => {
         </View>
       </View>
 
-      {errMsg && (
-        <Text style={{marginBottom: 100, fontSize: 16, color: color}}>
-          {errMsg}
-        </Text>
-      )}
+      <Text
+        style={{
+          marginBottom: 100,
+          fontSize: 16,
+          color: '#FF0000',
+        }}>
+        {errMsg}
+      </Text>
 
       <Pressable
         style={{
@@ -141,17 +113,7 @@ const AuthEmailScreen = () => {
           backgroundColor: isEmailValid ? '#287BF3' : '#f4f4f4',
           borderRadius: 10,
         }}
-        onPress={() =>
-          isEmailValid &&
-          AuthEmail(
-            email,
-            setErrMsg,
-            setEmailInStore,
-            setAuthTokenStore,
-            setColor,
-            navigation,
-          )
-        }
+        onPress={() => isEmailValid && AuthEmail(email, setErrMsg, navigation)}
         disabled={!isEmailValid}>
         <Text
           style={{

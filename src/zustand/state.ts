@@ -12,6 +12,12 @@ export interface AuthTokenStoreState {
   clearToken: () => void;
 }
 
+export interface MessageIDStoreState {
+  messageID: string;
+  setMessageID: (messageID: string) => void;
+  clearMessageID: () => void;
+}
+
 export interface UidStoreState {
   uid: string;
   setUid: (uid: string) => void;

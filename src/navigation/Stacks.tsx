@@ -1,7 +1,10 @@
+import { HeaderBackButton } from '@react-navigation/elements';
 import {
-  createNativeStackNavigator
+  createNativeStackNavigator,
+  NativeStackNavigationProp
 } from '@react-navigation/native-stack';
 import React from 'react';
+import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { ROOT_NAVIGATION } from '../@types/ROOT_NAVIGATION';
 import AuthCodeScreen from '../screens/AuthCodeScreen';
 import AuthEmailScreen from '../screens/AuthEmailScreen';
@@ -19,6 +22,8 @@ const Stack = createNativeStackNavigator<ROOT_NAVIGATION>();
 
 const Stacks = () => {
   // Logic
+  const navigation =
+    useNavigation<NativeStackNavigationProp<ROOT_NAVIGATION>>();
 
   // View
   return (
@@ -49,7 +54,22 @@ const Stacks = () => {
         }}
       />
 
-      <Stack.Screen name="Register" component={RegisterScreen} />
+      <Stack.Screen
+        name="Register"
+        component={RegisterScreen}
+        options={{
+          headerShadowVisible: false,
+          headerTitle: '',
+          headerBackTitleVisible: false,
+          headerLeft: props => (
+            <HeaderBackButton
+              {...props}
+              onPress={() => navigation.navigate('AuthEmail')}
+              labelVisible={false}
+            />
+          ),
+        }}
+      />
 
       <Stack.Screen
         name="SignupFinish"

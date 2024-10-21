@@ -1,3 +1,4 @@
+import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useRef, useState } from 'react';
 import {
@@ -14,6 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
 import { ROOT_NAVIGATION } from '../@types/ROOT_NAVIGATION';
 import { Login } from '../utils/API/AutAPI';
+
 
 const LoginScreen = () => {
   // Logic
@@ -33,13 +35,13 @@ const LoginScreen = () => {
     }
   };
 
-  // // useFocusEffect로 스크린 데이터 초기화
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     setEmail('');
-  //     setPwd('');
-  //   }, []),
-  // );
+  // useFocusEffect로 스크린 데이터 초기화
+  useFocusEffect(
+    React.useCallback(() => {
+      setEmail('');
+      setPwd('');
+    }, []),
+  );
 
   // View
   return (

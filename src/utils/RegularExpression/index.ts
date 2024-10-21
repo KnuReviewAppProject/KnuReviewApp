@@ -12,7 +12,7 @@ export const isValidCode = (code: string) => {
 
 // 닉네임 정규 표현식
 export const isValidNickName = (nickname: string) => {
-  const nicknameRegex = /^[a-zA-Z0-9]{4,8}$/;
+  const nicknameRegex = /^[a-zA-Z0-9가-힣]{6,8}$/;
   return nicknameRegex.test(nickname);
 };
 

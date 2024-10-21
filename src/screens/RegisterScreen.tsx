@@ -1,18 +1,19 @@
-import { HeaderBackButton } from '@react-navigation/elements';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
-    ColorValue,
-    Image,
-    Platform,
-    Pressable,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
+  Alert,
+  ColorValue,
+  Image,
+  Platform,
+  Pressable,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import useNavigation from '../../node_modules/@react-navigation/core/src/useNavigation';
+import { ROOT_NAVIGATION } from '../@types/ROOT_NAVIGATION';
 import { Register, VerifyNickName } from '../utils/API/AutAPI';
 import { isValidNickName, isValidPassword } from '../utils/RegularExpression';
 import { useAuthTokenStore, useEmailStore } from '../zustand/store';
@@ -53,22 +54,6 @@ const RegisterScreen = () => {
       password2Ref.current.focus();
     }
   };
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerShadowVisible: false,
-      headerBackTitleVisible: true,
-      headerBackTitle: '',
-      headerTitle: '',
-      headerLeft: props => (
-        <HeaderBackButton
-          {...props}
-          onPress={() => navigation.navigate('AuthEmail')}
-          labelVisible={false}
-        />
-      ),
-    });
-  })
 
   // View
   return (
@@ -111,10 +96,16 @@ const RegisterScreen = () => {
 
         <Pressable
           style={{backgroundColor: '#287BF3', borderRadius: 5, padding: 5}}
-          onPress={() =>
-            isNickNameValid &&
-            VerifyNickName(nickname, token, setErrMsg, setColor)
-          }>
+          onPress={() => {
+            if (!isNickNameValid) {
+              Alert.alert(
+                '닉네임 입력 오류',
+                '한글, 영어, 숫자 조합으로 4-6 글자 이하로 입력하세요.',
+              );
+            } else {
+              VerifyNickName(nickname, token, setErrMsg, setColor);
+            }
+          }}>
           <Text style={{fontSize: 12, color: 'white'}}>중복 확인</Text>
         </Pressable>
       </View>
@@ -137,7 +128,17 @@ const RegisterScreen = () => {
           returnKeyType="next"
           autoCapitalize="none"
           keyboardType="email-address"
-          onSubmitEditing={handlePassword1Submit}
+          multiline={false}
+          onSubmitEditing={() => {
+            if (!isNickNameValid) {
+              Alert.alert(
+                '닉네임 입력 오류',
+                '한글, 영어, 숫자 조합으로 4-6 글자 이하로 입력하세요.',
+              );
+            } else {
+              VerifyNickName(nickname, token, setErrMsg, setColor);
+            }
+          }}
           onFocus={() => setIsNicknameFocused(true)}
           onBlur={() => setIsNicknameFocused(false)}
           style={{flex: 1, paddingVertical: 0}}
@@ -158,16 +159,14 @@ const RegisterScreen = () => {
         </View>
       </View>
 
-      {errMsg && (
-        <Text
-          style={{
-            fontSize: 16,
-            color: color,
-            marginBottom: 20,
-          }}>
-          {errMsg}
-        </Text>
-      )}
+      <Text
+        style={{
+          fontSize: 16,
+          color: color,
+          marginBottom: 20,
+        }}>
+        {errMsg}
+      </Text>
 
       <Text
         style={{
@@ -226,6 +225,7 @@ const RegisterScreen = () => {
           onSubmitEditing={handlePassword2Submit}
           onFocus={() => setIsPwd1Focused(true)}
           onBlur={() => setIsPwd1Focused(false)}
+          multiline={false}
           style={{flex: 1, paddingVertical: 0}}
         />
 
@@ -299,6 +299,7 @@ const RegisterScreen = () => {
           autoCapitalize="none"
           secureTextEntry={isPwd2Visible}
           keyboardType="visible-password"
+          multiline={false}
           onSubmitEditing={() =>
             isNickNameValid &&
             isPassWordValid &&
@@ -336,15 +337,13 @@ const RegisterScreen = () => {
         </View>
       </View>
 
-      {pwd1 !== pwd2 && (
         <Text
           style={{
             marginBottom: Platform.OS === 'ios' ? 30 : 70,
             color: '#F33A28',
           }}>
-          비밀번호가 일치하지 않습니다.
+          {pwd1 !== pwd2 && "비밀번호가 일치하지 않습니다."}
         </Text>
-      )}
 
       <Pressable
         style={{

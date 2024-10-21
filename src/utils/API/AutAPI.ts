@@ -21,8 +21,8 @@ const {setEmail} = useEmailStore.getState();
 const {setMessageID} = useMessageIDStore.getState();
 
 const {setUser, clearUser} = useUserStore.getState();
-const {clearReviews} = useReviewStore.getState();
-const {clearMyReviews} = useMyReviewStore.getState();
+const {reviews, clearReviews} = useReviewStore.getState();
+const {myreviews, clearMyReviews} = useMyReviewStore.getState();
 
 // 이메일 중복 여부 판단 api 함수
 export const AuthEmail = async (
@@ -64,7 +64,7 @@ export const AuthEmail = async (
 };
 
 // 인증코드 발송 api 함수
-export const AuthCode = (
+export const AuthCode = async (
   email: string,
   code: string,
   token: string,
@@ -81,7 +81,7 @@ export const AuthCode = (
   }
 
   try {
-    axios
+    await axios
       .post(`${API_URL}/api/verify-code`, {
         email: email,
         code: code,
@@ -115,19 +115,21 @@ export const AuthCode = (
 };
 
 // 닉네임 중복여부 판단 api 함수
-export const VerifyNickName = (
+export const VerifyNickName = async (
   nickname: string,
   token: string,
   setErrMsg: (errMsg: string) => void,
   setColor: (color: string) => void,
 ) => {
   try {
-    axios
+    await axios
       .post(`${API_URL}/api/verify-nickname`, {
         nickname: nickname,
         token: token,
       })
       .then(res => {
+        console.log(res.status);
+
         if (res.status === 200) {
           setErrMsg('사용 가능한 닉네임 입니다.');
           setColor('#287BF3');
@@ -138,7 +140,7 @@ export const VerifyNickName = (
           if (err.response.status === 400) {
             setErrMsg('입력한 닉네임을 다시 확인해주세요.');
             setColor('#FF0000');
-          } else if (err.response.status === 409) {
+          } else if (err.response.status === 401) {
             setErrMsg('이미 존재하는 닉네임입니다.');
             setColor('#FF0000');
           }
@@ -146,32 +148,32 @@ export const VerifyNickName = (
         console.log(err);
       });
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 };
 
 // 회원가입 api 함수
-export const Register = (
+export const Register = async (
   nickname: string,
   email: string,
   password: string,
   token: string,
   navigation: NativeStackNavigationProp<ROOT_NAVIGATION>,
 ) => {
-  if (!nickname || !nickname.trim()) {
-    Alert.alert('알림', '닉네임을 입력해주세요.');
+  if (!nickname) {
+    return Alert.alert('알림', '닉네임을 입력해주세요.');
   }
 
-  if (!email || !email.trim()) {
-    Alert.alert('알림', '이메일을 입력해주세요.');
+  if (!email) {
+    return Alert.alert('알림', '이메일을 입력해주세요.');
   }
 
-  if (!password || !password.trim()) {
-    Alert.alert('알림', '비밀번호를 입력해주세요.');
+  if (!password) {
+    return Alert.alert('알림', '비밀번호를 입력해주세요.');
   }
 
   try {
-    axios
+    await axios
       .post(`${API_URL}/api/register`, {
         nickname: nickname,
         email: email,
@@ -179,19 +181,18 @@ export const Register = (
         token: token,
       })
       .then(res => {
-        console.log(res.status);
-        console.log(res.data);
+        console.log(JSON.stringify(res.data.user, null, 5));
         navigation.navigate('SignupFinish');
       })
       .catch(err => {
         if (err.response) {
           if (err.response.status === 400) {
-            Alert.alert(
+            return Alert.alert(
               '알림',
               '입력한 닉네임, 이메일, 비밀번호를 확인해주세요.',
             );
-          } else if (err.response.status === 409) {
-            Alert.alert('알림', '이미 존재하는 계정 입니다.');
+          } else if (err.response.status === 401) {
+            return Alert.alert('알림', '이미 존재하는 계정 입니다.');
           }
         }
         console.log(err);
@@ -202,7 +203,7 @@ export const Register = (
 };
 
 // 로그인 api 함수
-export const Login = (
+export const Login = async(
   email: string,
   password: string,
   navigation: NativeStackNavigationProp<ROOT_NAVIGATION>,
@@ -219,7 +220,7 @@ export const Login = (
     return Alert.alert('로그인 실패', '비밀번호를 입력해주세요.');
   }
 
-  firebase
+  await firebase
     .auth()
     .signInWithEmailAndPassword(email, password)
     .then(result => {
@@ -229,33 +230,37 @@ export const Login = (
           uid: user.uid,
         })
         .then(res => {
-          const result = JSON.stringify(res.data, null, 5);
-
-          console.log(result);
-          setUser(res.data);
+          console.log(JSON.stringify(res.data.user, null, 5));
+          setUser(res.data.user);
           navigation.navigate('Tabs');
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+          console.log(err)
+          return Alert.alert('로그인 실패', err);
+        });
     })
-    .catch(err => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      return Alert.alert('로그인 실패', '등록된 계정이 아닙니다.');
+    });
 };
 
 // 로그아웃 api
-export const Logout = (
+export const Logout = async (
   navigation: NativeStackNavigationProp<ROOT_NAVIGATION>,
 ) => {
   try {
-    firebase
+    await firebase
       .auth()
       .signOut()
       .then(() => {
         console.log('로그아웃');
         clearUser();
-        clearReviews();
-        clearMyReviews();
+        // clearReviews();
+        // clearMyReviews();
         navigation.navigate('Login');
       })
-      .catch(err => console.log('try 에러: ', err));
+      .catch(err => console.log(err));
   } catch (error) {
     console.log(error);
   }
@@ -392,25 +397,34 @@ export const EditProfileImage = (
 };
 
 // 회원탈퇴 api
-export const Unsubscribe = (
+export const Unsubscribe = async (
   uid: string,
   email: string,
   navigation: NativeStackNavigationProp<ROOT_NAVIGATION>,
 ) => {
   try {
-    axios
+    await axios
       .post(`${API_URL}/api/delete-account`, {
         uid: uid,
         email: email,
       })
       .then(() => {
         clearUser();
-        clearReviews();
-        clearMyReviews();
-        navigation.navigate('Login');
+        return Alert.alert(
+          '알림',
+          '회원탈퇴 완료되었습니다. 다시 회원가입 해주세요.',
+          [
+            {
+              text: '회원가입 하기',
+              onPress: () => navigation.navigate('Login')
+            }
+          ]
+        );
+        // clearReviews();
+        // clearMyReviews();
       })
-      .catch(err => console.log('try 에러: ', err));
+      .catch(err => console.log(err));
   } catch (error) {
-    console.log('catch 에러: ', error);
+    console.log(error);
   }
 };
